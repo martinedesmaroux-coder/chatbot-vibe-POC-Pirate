@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Vibe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-main">
+                <h1>Chat EISF - Commande de gâteau</h1>
+                <p class="subtitle"><i id="clientNameDisplay">Client</i></p>
+            </div>
+            <div class="header-actions">
+                <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
+            </div>
+        </div>
+        
+        <div class="chat-box" id="chatBox">
+            <!-- Les messages s'affichent ici -->
+        </div>
+        
+        <div class="input-area">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Écrivez votre message..."
+                autocomplete="off"
+            >
+            <button id="sendBtn">Envoyer</button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 EISF - Tous droits réservés | Chat virtuel intelligent</p>
+    </footer>
+    
+    <!-- Panneau de debug (toggle) -->
+    <div id="debugPanel" class="debug-panel" hidden>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">Debug - dernière réponse Make</h3>
+            <div style="display:flex;gap:8px;align-items:center">
+                <button id="copyPayloadBtn" class="debug-toggle">Copier dernier payload</button>
+            </div>
+        </div>
+        <div style="margin-top:8px"><strong>Statut:</strong> <span id="debugStatus">-</span></div>
+        <div><strong>Content-Type:</strong> <span id="debugContentType">-</span></div>
+        <div><strong>Headers:</strong></div>
+        <pre id="debugHeaders">-</pre>
+        <div><strong>Body:</strong></div>
+        <pre id="debugBody">-</pre>
+        <div><strong>Dernier payload envoyé:</strong></div>
+        <pre id="debugPayload">-</pre>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
