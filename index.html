@@ -7,36 +7,71 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-main">
-                <h1>Chat EISF - Commande de gâteau</h1>
-                <p class="subtitle"><i id="clientNameDisplay">Client</i></p>
+    <div class="wrapper">
+        <!-- Colonne de Chat -->
+        <div class="chat-column">
+            <div class="header">
+                <div class="header-main">
+                    <h1 id="chatbotTitle">La Pâtisserie des Brotteaux</h1>
+                    <p class="subtitle">Client : <span id="clientNameDisplay">Madame Martin</span></p>
+                </div>
+                <div class="header-actions">
+                    <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
+                </div>
             </div>
-            <div class="header-actions">
-                <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
+            <div class="name-input-section">
+                <input 
+                    type="text" 
+                    id="clientNameInput" 
+                    class="name-input" 
+                    placeholder="Entrez votre nom pour commencer"
+                    autocomplete="off"
+                >
+                <button id="validateNameBtn" class="validate-name-btn" disabled>Valider</button>
+            </div>
+            <p class="input-helper-text">Veuillez valider votre nom pour activer le chat.</p>
+            <div class="chat-box" id="chatBox">
+                <!-- Les messages s'affichent ici -->
+            </div>
+            <div class="input-area-wrapper">
+                <div class="input-area">
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Validez votre nom pour écrire..."
+                        autocomplete="off"
+                        disabled
+                    >
+                    <button id="sendBtn" disabled>Envoyer</button>
+                </div>
             </div>
         </div>
-        
-        <div class="chat-box" id="chatBox">
-            <!-- Les messages s'affichent ici -->
+
+        <!-- Colonne d'information -->
+        <div class="info-column">
+            <div class="info-card">
+                <img src="La patisserie des Brotteaux.png" alt="Logo Pâtisserie des Brotteaux" class="info-card-logo">
+                <h3>Informations</h3>
+                <p><strong>Adresse :</strong> 71 rue Tronchet, 69006 Lyon</p>
+                <p><strong>Horaires :</strong></p>
+                <ul>
+                    <li>Lundi : Fermé</li>
+                    <li>Mardi - Vendredi : 8h00 – 19h00</li>
+                    <li>Samedi : 8h30 – 18h00</li>
+                    <li>Dimanche : 8h30 – 13h00</li>
+                </ul>
+                <p><strong>Livraison (rayon 1km) :</strong></p>
+                 <ul>
+                    <li>Zones : Lyon 6, Lyon 3 (partiel), Villeurbanne (partiel)</li>
+                    <li>Jours : Du Mardi au Samedi</li>
+                    <li>Minimum : 20 €</li>
+                    <li>Frais : 3 €</li>
+                </ul>
+            </div>
+            <div id="calendar-container" class="calendar-container"></div>
         </div>
-        
-        <div class="input-area">
-            <input 
-                type="text" 
-                id="messageInput" 
-                placeholder="Écrivez votre message..."
-                autocomplete="off"
-            >
-            <button id="sendBtn">Envoyer</button>
-        </div>
+
     </div>
-    
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 EISF - Tous droits réservés | Chat virtuel intelligent</p>
-    </footer>
     
     <!-- Panneau de debug (toggle) -->
     <div id="debugPanel" class="debug-panel" hidden>

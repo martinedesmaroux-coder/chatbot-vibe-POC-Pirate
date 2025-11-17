@@ -1,6 +1,6 @@
 // Configuration
 const WEBHOOK_URL = 'https://hook.eu1.make.com/hnafrokq43x9kb3ls450r4fw7injhdgi';
-
+let lastPayload = null; // Dernier payload envoyé (pour debug / copie)
 // Génération d'ID unique
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -10,135 +10,218 @@ function generateUUID() {
     });
 }
 
-// Éléments du DOM
-const chatBox = document.getElementById('chatBox');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
-const debugToggle = document.getElementById('debugToggle');
-const debugPanel = document.getElementById('debugPanel');
-const debugStatus = document.getElementById('debugStatus');
-const debugContentType = document.getElementById('debugContentType');
-const debugHeaders = document.getElementById('debugHeaders');
-const debugBody = document.getElementById('debugBody');
-
-// Événements
-sendBtn.addEventListener('click', sendMessage);
-messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-// Toggle debug panel
-if (debugToggle) {
-    debugToggle.addEventListener('click', () => {
-        const isHidden = debugPanel.hasAttribute('hidden');
-        if (isHidden) {
-            debugPanel.removeAttribute('hidden');
-            debugToggle.textContent = 'Masquer debug';
-            debugToggle.setAttribute('aria-pressed', 'true');
-        } else {
-            debugPanel.setAttribute('hidden', '');
-            debugToggle.textContent = 'Afficher debug';
-            debugToggle.setAttribute('aria-pressed', 'false');
-        }
-    });
-}
-
-/**
- * Met à jour le panneau de debug
- */
-function setDebugInfo(status, contentType, headersObj, bodyText) {
-    console.info('Make response:', { status, contentType, headers: headersObj, body: bodyText });
-    if (debugStatus) debugStatus.textContent = `${status}`;
-    if (debugContentType) debugContentType.textContent = contentType || '-';
-    if (debugHeaders) debugHeaders.textContent = JSON.stringify(headersObj || {}, null, 2);
-    if (debugBody) debugBody.textContent = bodyText || '-';
-}
-
-/**
- * Extrait le texte pertinent depuis un objet de réponse Make (s'il existe)
- */
-function extractTextFromData(data) {
-    if (!data) return null;
-    // chemins probables
-    if (typeof data === 'string') return data;
-    if (data.response) return data.response;
-    if (data.message) return data.message;
-    if (data.text) return data.text;
-    if (data.body && typeof data.body === 'string') return data.body;
-    if (data.output && (data.output.text || data.output[0])) return data.output.text || (Array.isArray(data.output) ? data.output[0] : null);
-    if (data.result && (data.result.text || data.result[0])) return data.result.text || (Array.isArray(data.result) ? data.result[0] : null);
-    if (data.choices && Array.isArray(data.choices) && data.choices[0] && (data.choices[0].text || data.choices[0].message)) {
-        return data.choices.map(c => c.text || c.message || '').join('\n');
-    }
-    // rechercher récursivement une première propriété string
-    try {
-        const stack = [data];
-        while (stack.length) {
-            const node = stack.shift();
-            if (!node || typeof node !== 'object') continue;
-            for (const k of Object.keys(node)) {
-                const v = node[k];
-                if (typeof v === 'string' && v.trim().length) return v;
-                if (typeof v === 'object') stack.push(v);
-            }
-        }
-    } catch (e) {
-        // noop
-    }
-    return null;
-}
-
 // Variables globales
-let chatbotName = 'Madame Martin';
-let clientName = 'Client';  // Nom du client (à remplir dynamiquement)
+let chatbotName = 'La Pâtisserie des Brotteaux';
+let clientName = 'Madame Martin';  // Nom du client par défaut
 let conversationId = Math.floor(Date.now() * Math.random()).toString();  // ID numérique unique
 let messageCounter = 0;  // Compteur de messages
 const MAX_EMPTY_BODY_RETRIES = 1;
 
-// Dernier payload envoyé (pour debug / copie)
-let lastPayload = null;
-
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-// Copy payload button binding
-const copyPayloadBtn = document.getElementById('copyPayloadBtn');
-const debugPayloadPre = document.getElementById('debugPayload');
-if (copyPayloadBtn) {
-    copyPayloadBtn.addEventListener('click', async () => {
-        if (!lastPayload) {
-            copyPayloadBtn.textContent = 'Aucun payload';
-            setTimeout(() => copyPayloadBtn.textContent = 'Copier dernier payload', 1500);
-            return;
-        }
-        try {
-            await navigator.clipboard.writeText(JSON.stringify(lastPayload, null, 2));
-            copyPayloadBtn.textContent = 'Copié ✅';
-            setTimeout(() => copyPayloadBtn.textContent = 'Copier dernier payload', 1500);
-        } catch (e) {
-            console.warn('Impossible de copier le payload dans le presse-papier', e);
-            // fallback: select the pre so user can copy manually
-            if (debugPayloadPre) {
-                const range = document.createRange();
-                range.selectNodeContents(debugPayloadPre);
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Éléments du DOM ---
+    const chatBox = document.getElementById('chatBox');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const debugToggle = document.getElementById('debugToggle');
+    const debugPanel = document.getElementById('debugPanel');
+    const debugStatus = document.getElementById('debugStatus');
+    const debugContentType = document.getElementById('debugContentType');
+    const debugHeaders = document.getElementById('debugHeaders');
+    const debugBody = document.getElementById('debugBody');
+    const copyPayloadBtn = document.getElementById('copyPayloadBtn');
+    const debugPayloadPre = document.getElementById('debugPayload');
+    const inputHelperText = document.querySelector('.input-helper-text');
+    const clientNameInput = document.getElementById('clientNameInput');
+    const validateNameBtn = document.getElementById('validateNameBtn');
+
+    // --- Événements ---
+    if (sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+    }
+    if (messageInput) {
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
             }
-        }
+        });
+    }
+    if (debugToggle) {
+        debugToggle.addEventListener('click', () => {
+            const isHidden = debugPanel.hasAttribute('hidden');
+            debugPanel.hidden = !isHidden;
+            debugToggle.textContent = isHidden ? 'Masquer debug' : 'Afficher debug';
+            debugToggle.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+        });
+    }
+
+    if (clientNameInput && validateNameBtn) {
+        // Activer le bouton "Valider" seulement si du texte est présent
+        clientNameInput.addEventListener('input', () => {
+            validateNameBtn.disabled = !clientNameInput.value.trim();
+        });
+
+        // Logique du clic sur le bouton "Valider"
+        validateNameBtn.addEventListener('click', () => {
+            const nameValue = clientNameInput.value.trim();
+            if (nameValue) {
+                clientName = nameValue;
+
+                // 1. Mettre à jour le nom affiché dans l'en-tête
+                document.getElementById('clientNameDisplay').textContent = nameValue;
+
+                // 2. Activer la zone de saisie de message
+                messageInput.disabled = false;
+                
+                // 3. Mettre à jour les textes d'aide
+                if (inputHelperText) inputHelperText.textContent = 'Écrivez votre message ci-dessous.';
+                messageInput.placeholder = 'Écrivez votre message...';
+
+                // 4. Désactiver la section de saisie du nom
+                clientNameInput.disabled = true;
+                validateNameBtn.disabled = true;
+                
+                // 5. Envoyer le nom à Make et afficher le premier message
+                sendInitToMake(nameValue);
+                
+                // 6. Mettre le focus sur le champ de message
+                messageInput.focus();
+            }
+        });
+
+        // Permettre de valider avec la touche "Entrée"
+        clientNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Empêche le rechargement de la page
+                validateNameBtn.click(); // Simule un clic sur le bouton
+            }
+        });
+
+        // Activer le bouton "Envoyer" uniquement si du texte est présent
+        messageInput.addEventListener('input', () => {
+            if (messageInput.value.trim() !== '') {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                }
+            } else {
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                }
+            }
+        });
+    }
+
+    if (copyPayloadBtn) {
+        copyPayloadBtn.addEventListener('click', async () => {
+            if (!lastPayload) {
+                copyPayloadBtn.textContent = 'Aucun payload';
+                setTimeout(() => copyPayloadBtn.textContent = 'Copier dernier payload', 1500);
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(JSON.stringify(lastPayload, null, 2));
+                copyPayloadBtn.textContent = 'Copié ✅';
+                setTimeout(() => copyPayloadBtn.textContent = 'Copier dernier payload', 1500);
+            } catch (e) {
+                console.warn('Impossible de copier le payload dans le presse-papier', e);
+                if (debugPayloadPre) {
+                    const range = document.createRange();
+                    range.selectNodeContents(debugPayloadPre);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        });
+    }
+
+    // Initialise le calendrier en décembre 2025.
+    renderCalendar(new Date('2025-12-01'));
+});
+
+// Garde en mémoire la date affichée par le calendrier
+let currentCalendarDate = new Date();
+
+/**
+ * Génère et affiche un calendrier dynamique.
+ * @param {Date} dateToShow La date à utiliser pour afficher le mois correct.
+ */
+function renderCalendar(dateToShow) {
+    const calendarContainer = document.getElementById('calendar-container');
+    if (!calendarContainer) return;
+
+    currentCalendarDate = new Date(dateToShow);
+    const month = currentCalendarDate.getMonth();
+    const year = currentCalendarDate.getFullYear();
+
+    // La date à considérer comme "aujourd'hui" pour la mise en évidence
+    const highlightedDate = new Date('2025-12-05');
+    // On vérifie si le calendrier affiche le mois et l'année de la date à surligner
+    const isHighlightMonth = highlightedDate.getFullYear() === year && highlightedDate.getMonth() === month;
+
+    const firstDayOfMonth = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let startingDay = firstDayOfMonth.getDay();
+    startingDay = (startingDay === 0) ? 6 : startingDay - 1; // Lundi = 0, Dimanche = 6
+
+    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+    const dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+
+    let html = `
+        <div class="calendar-header">
+            <button id="prev-month-btn" class="calendar-nav-btn">‹</button>
+            <h4>${monthNames[month]} ${year}</h4>
+            <button id="next-month-btn" class="calendar-nav-btn">›</button>
+        </div>
+        <div class="calendar-grid">
+    `;
+
+    dayNames.forEach(day => {
+        html += `<div class="calendar-cell calendar-day-name">${day}</div>`;
+    });
+
+    for (let i = 0; i < startingDay; i++) {
+        html += `<div class="calendar-cell"></div>`;
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        // Le jour est-il celui à surligner ?
+        const isToday = isHighlightMonth && (day === highlightedDate.getDate());
+        const dayOfWeek = (new Date(year, month, day).getDay() + 6) % 7; // 0 (Lundi) à 6 (Dimanche)
+        const isMonday = dayOfWeek === 0;
+
+        html += `<div class="calendar-cell calendar-date ${isToday ? 'today' : ''} ${isMonday ? 'monday' : ''}">${day}</div>`;
+    }
+
+    html += `</div>`;
+    calendarContainer.innerHTML = html;
+
+    // --- Logique de navigation ---
+    const nextMonthBtn = document.getElementById('next-month-btn');
+    const prevMonthBtn = document.getElementById('prev-month-btn');
+
+    // Limite de navigation : 1 an à partir de décembre 2025
+    const limitDate = new Date('2025-12-01');
+    limitDate.setFullYear(limitDate.getFullYear() + 1);
+
+    // Désactiver le bouton "suivant" si on atteint la limite (Novembre 2026)
+    if (currentCalendarDate.getFullYear() === limitDate.getFullYear() && currentCalendarDate.getMonth() === limitDate.getMonth() -1) {
+        nextMonthBtn.disabled = true;
+    }
+
+    nextMonthBtn.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+        renderCalendar(currentCalendarDate);
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+        renderCalendar(currentCalendarDate);
     });
 }
-
-// Message de bienvenue au chargement de la page
-window.addEventListener('load', async () => {
-    // Récupérer le nom du chatbot depuis Make si configuré
-    await initializeChatbot();
-    
-    const welcomeMessage = `Bonjour, je voudrais passer une commande.`;
-    addMessage(welcomeMessage, 'ai');
-});
 
 /**
  * Initialise le chatbot en récupérant les données depuis Make
@@ -154,6 +237,7 @@ async function initializeChatbot() {
             body: JSON.stringify({
                 conversationId: conversationId,
                 messageId: '0',
+                clientName: clientName,
                 chatbotName: chatbotName,
                 action: 'init',
                 timestamp: new Date().toISOString()
@@ -199,14 +283,45 @@ async function initializeChatbot() {
 }
 
 /**
+ * Envoie le nom du client à Make lors de la validation
+ */
+async function sendInitToMake(clientName) {
+    try {
+        // Effectuer un appel POST initial pour envoyer le nom du client
+        const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                conversationId: conversationId,
+                messageId: '0',
+                clientName: clientName,
+                chatbotName: chatbotName,
+                action: 'init',
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        if (!response.ok) {
+            console.warn('sendInitToMake: réponse non OK', response.status, response.statusText);
+        }
+        
+        const welcomeMessage = `Bonjour, je voudrais passer une commande.`;
+        addMessage(welcomeMessage, 'ai');
+        
+    } catch (error) {
+        console.warn('Impossible d\'envoyer le nom du client à Make:', error);
+    }
+}
+
+
+/**
  * Envoie un message au webhook Make
  */
 async function sendMessage() {
     const message = messageInput.value.trim();
-    
     if (!message) return;
-    
-    // Vérifier que le webhook URL est configuré
     if (WEBHOOK_URL === 'YOUR_MAKE_WEBHOOK_URL_HERE') {
         alert('⚠️ Veuillez configurer votre URL webhook Make dans script.js');
         return;
@@ -227,6 +342,7 @@ async function sendMessage() {
         const payload = {
             conversationId: conversationId,
             messageId: messageCounter.toString(),
+            clientName: clientName,
             chatbotName: chatbotName,
             action: 'message',
             message: message,
