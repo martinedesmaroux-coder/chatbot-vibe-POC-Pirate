@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialise le calendrier
-    renderCalendar(new Date(2025, 8, 5)); // Initialise le calendrier en Décembre 2025
+    renderCalendar(new Date(2025, 10, 5)); // Initialise le calendrier en Novembre 2025
 });
 
 // Garde en mémoire la date affichée par le calendrier
@@ -241,8 +241,8 @@ function renderCalendar(dateToShow) {
     const nextMonthBtn = document.getElementById('next-month-btn');
     const prevMonthBtn = document.getElementById('prev-month-btn');
 
-    // Limites de navigation sur un an, de décembre 2025 à novembre 2026
-    const minNavDate = new Date(2025, 11, 1); // Décembre 2025
+    // Limites de navigation sur un an, de novembre 2025 à novembre 2026
+    const minNavDate = new Date(2025, 10, 1); // Novembre 2025
     const maxNavDate = new Date(2026, 10, 1); // Novembre 2026
 
     // Désactiver le bouton "précédent" si on est au mois minimum
