@@ -255,6 +255,21 @@ function renderCalendar(dateToShow) {
 }
 
 /**
+ * Met à jour le panneau de debug avec les informations de la requête
+ */
+function setDebugInfo(status, contentType, headers, body) {
+    const debugStatus = document.getElementById('debugStatus');
+    const debugContentType = document.getElementById('debugContentType');
+    const debugHeaders = document.getElementById('debugHeaders');
+    const debugBody = document.getElementById('debugBody');
+    
+    if (debugStatus) debugStatus.textContent = status;
+    if (debugContentType) debugContentType.textContent = contentType;
+    if (debugHeaders) debugHeaders.textContent = JSON.stringify(headers, null, 2);
+    if (debugBody) debugBody.textContent = body;
+}
+
+/**
  * Initialise le chatbot en récupérant les données depuis Make
  */
 async function initializeChatbot() {
