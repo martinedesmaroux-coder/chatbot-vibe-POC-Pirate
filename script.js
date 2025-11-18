@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialise le calendrier
-    renderCalendar(new Date(2025, 8, 21)); // Initialise le calendrier en Septembre 2025
+    renderCalendar(new Date(2025, 8, 5)); // Initialise le calendrier en Décembre 2025
 });
 
 // Garde en mémoire la date affichée par le calendrier
@@ -193,9 +193,9 @@ function renderCalendar(dateToShow) {
     const month = currentCalendarDate.getMonth();
     const year = currentCalendarDate.getFullYear();
 
-    // La date fixe à surligner (21 septembre 2025)
-    const highlightDay = 21;
-    const highlightMonth = 8; // Septembre est le 8ème mois (0-indexé)
+    // La date fixe à surligner (5 décembre 2025)
+    const highlightDay = 5;
+    const highlightMonth = 11; // Décembre est le 11ème mois (0-indexé)
     const highlightYear = 2025;
 
 
@@ -241,9 +241,9 @@ function renderCalendar(dateToShow) {
     const nextMonthBtn = document.getElementById('next-month-btn');
     const prevMonthBtn = document.getElementById('prev-month-btn');
 
-    // Limites de navigation sur un an, de Septembre 2025 à Août 2026
-    const minNavDate = new Date(2025, 8, 1); // Septembre 2025
-    const maxNavDate = new Date(2026, 7, 1); // Août 2026
+    // Limites de navigation sur un an, de décembre 2025 à novembre 2026
+    const minNavDate = new Date(2025, 11, 1); // Décembre 2025
+    const maxNavDate = new Date(2026, 10, 1); // Novembre 2026
 
     // Désactiver le bouton "précédent" si on est au mois minimum
     if (currentCalendarDate.getFullYear() <= minNavDate.getFullYear() && currentCalendarDate.getMonth() <= minNavDate.getMonth()) {
