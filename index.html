@@ -12,14 +12,14 @@
         <div class="chat-column">
             <div class="header">
                 <div class="header-main">
-                    <h1 id="chatbotTitle">La Pâtisserie des Brotteaux</h1>
-                    <p class="subtitle">Client : <span id="clientNameDisplay">Madame Martin</span></p>
+                    <h1 id="chatbotTitle" data-client-name-display="true">La Pâtisserie des Brotteaux</h1>
+                    <p class="subtitle">Madame Martin souhaite passer une commande. Vous pouvez la questionner. Lorsque vous avez obtenu toutes les informations nécessaires, récapitulez l'ensemble de la commande et proposez de lui envoyer un devis.</p>
                 </div>
                 <div class="header-actions">
                     <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
                 </div>
             </div>
-            <div class="name-input-section">
+            <div class="name-input-section" hidden>
                 <input 
                     type="text" 
                     id="clientNameInput" 
@@ -45,6 +45,7 @@
                     <button id="sendBtn" disabled>Envoyer</button>
                 </div>
             </div>
+            <p class="disclaimer-text">Votre prénom sert uniquement à personnaliser votre expérience.<br>Vos échanges, anonymisés, peuvent être utilisés pour entraîner des intelligences artificielles, sans aucune donnée identifiable.</p>
         </div>
 
         <!-- Colonne d'information -->

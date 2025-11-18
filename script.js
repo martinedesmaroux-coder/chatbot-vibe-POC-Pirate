@@ -1,6 +1,7 @@
 // Configuration
 const WEBHOOK_URL = 'https://hook.eu1.make.com/hnafrokq43x9kb3ls450r4fw7injhdgi';
 let lastPayload = null; // Dernier payload envoyé (pour debug / copie)
+let debugPayloadPre = null; // Élément <pre> pour le payload (pour debug)
 // Génération d'ID unique
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -19,6 +20,35 @@ const MAX_EMPTY_BODY_RETRIES = 1;
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
+/**
+ * Démarre le chat en utilisant un nom de client prédéfini.
+ * @param {string} nameValue Le nom du client à utiliser.
+ */
+function startChat(nameValue) {
+    const messageInput = document.getElementById('messageInput');
+    const inputHelperText = document.querySelector('.input-helper-text');
+    const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
+    const clientNameInput = document.getElementById('clientNameInput');
+    const validateNameBtn = document.getElementById('validateNameBtn');
+
+    if (nameValue) {
+        clientName = nameValue;
+
+        // Mettre à jour le nom affiché dans l'en-tête (si nécessaire)
+        if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
+
+        // Activer la zone de saisie de message
+        messageInput.disabled = false;
+        
+        // Mettre à jour les textes d'aide
+        if (inputHelperText) inputHelperText.textContent = '';
+        messageInput.placeholder = 'Écrivez votre message...';
+
+        // Afficher le premier message de l'utilisateur de manière progressive, sans l'envoyer à Make
+        displayProgressively("Bonjour, je voudrais passer une commande.", 'ai');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Éléments du DOM ---
     const chatBox = document.getElementById('chatBox');
@@ -31,8 +61,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const debugHeaders = document.getElementById('debugHeaders');
     const debugBody = document.getElementById('debugBody');
     const copyPayloadBtn = document.getElementById('copyPayloadBtn');
-    const debugPayloadPre = document.getElementById('debugPayload');
+    debugPayloadPre = document.getElementById('debugPayload'); // Assignation de la variable globale
     const inputHelperText = document.querySelector('.input-helper-text');
+    const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
     const clientNameInput = document.getElementById('clientNameInput');
     const validateNameBtn = document.getElementById('validateNameBtn');
 
@@ -70,13 +101,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 clientName = nameValue;
 
                 // 1. Mettre à jour le nom affiché dans l'en-tête
-                document.getElementById('clientNameDisplay').textContent = nameValue;
+                if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
 
                 // 2. Activer la zone de saisie de message
                 messageInput.disabled = false;
                 
                 // 3. Mettre à jour les textes d'aide
-                if (inputHelperText) inputHelperText.textContent = 'Écrivez votre message ci-dessous.';
+                if (inputHelperText) inputHelperText.textContent = '';
                 messageInput.placeholder = 'Écrivez votre message...';
 
                 // 4. Désactiver la section de saisie du nom
@@ -84,10 +115,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 validateNameBtn.disabled = true;
                 
                 // 5. Envoyer le nom à Make et afficher le premier message
-                sendInitToMake(nameValue);
-                
-                // 6. Mettre le focus sur le champ de message
                 messageInput.focus();
+
+                // 6. Démarrer le chat pour afficher le message de bienvenue
+                startChat(nameValue);
             }
         });
 
@@ -137,8 +168,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initialise le calendrier en décembre 2025.
-    renderCalendar(new Date('2025-12-01'));
+    // Initialise le calendrier
+    renderCalendar(new Date());
 });
 
 // Garde en mémoire la date affichée par le calendrier
@@ -157,7 +188,7 @@ function renderCalendar(dateToShow) {
     const year = currentCalendarDate.getFullYear();
 
     // La date à considérer comme "aujourd'hui" pour la mise en évidence
-    const highlightedDate = new Date('2025-12-05');
+    const highlightedDate = new Date();
     // On vérifie si le calendrier affiche le mois et l'année de la date à surligner
     const isHighlightMonth = highlightedDate.getFullYear() === year && highlightedDate.getMonth() === month;
 
@@ -269,8 +300,8 @@ async function initializeChatbot() {
                 if (data.chatbotName) chatbotName = data.chatbotName;
                 if (data.name) chatbotName = data.name;
                 if (data.clientName) {
-                    clientName = data.clientName;
-                    document.getElementById('clientNameDisplay').textContent = clientName;
+                    clientName = data.clientName;                    
+                    if (clientNameDisplay) clientNameDisplay.dataset.clientName = clientName;
                 }
             }
         } else {
@@ -306,9 +337,6 @@ async function sendInitToMake(clientName) {
         if (!response.ok) {
             console.warn('sendInitToMake: réponse non OK', response.status, response.statusText);
         }
-        
-        const welcomeMessage = `Bonjour, je voudrais passer une commande.`;
-        addMessage(welcomeMessage, 'ai');
         
     } catch (error) {
         console.warn('Impossible d\'envoyer le nom du client à Make:', error);
