@@ -49,6 +49,12 @@ function startChat(nameValue) {
     }
 }
 
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Éléments du DOM ---
     const chatBox = document.getElementById('chatBox');
@@ -169,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initialise le calendrier
-    renderCalendar(new Date());
+    renderCalendar(new Date(2025, 8, 21)); // Initialise le calendrier en Septembre 2025
 });
 
 // Garde en mémoire la date affichée par le calendrier
@@ -183,14 +189,15 @@ function renderCalendar(dateToShow) {
     const calendarContainer = document.getElementById('calendar-container');
     if (!calendarContainer) return;
 
-    currentCalendarDate = new Date(dateToShow);
+    currentCalendarDate = new Date(dateToShow); // Utilise la date passée pour le mois et l'année affichés
     const month = currentCalendarDate.getMonth();
     const year = currentCalendarDate.getFullYear();
 
-    // La date à considérer comme "aujourd'hui" pour la mise en évidence
-    const highlightedDate = new Date();
-    // On vérifie si le calendrier affiche le mois et l'année de la date à surligner
-    const isHighlightMonth = highlightedDate.getFullYear() === year && highlightedDate.getMonth() === month;
+    // La date fixe à surligner (21 septembre 2025)
+    const highlightDay = 21;
+    const highlightMonth = 8; // Septembre est le 8ème mois (0-indexé)
+    const highlightYear = 2025;
+
 
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -220,7 +227,7 @@ function renderCalendar(dateToShow) {
 
     for (let day = 1; day <= daysInMonth; day++) {
         // Le jour est-il celui à surligner ?
-        const isToday = isHighlightMonth && (day === highlightedDate.getDate());
+        const isToday = (day === highlightDay && month === highlightMonth && year === highlightYear);
         const dayOfWeek = (new Date(year, month, day).getDay() + 6) % 7; // 0 (Lundi) à 6 (Dimanche)
         const isMonday = dayOfWeek === 0;
 
@@ -234,13 +241,22 @@ function renderCalendar(dateToShow) {
     const nextMonthBtn = document.getElementById('next-month-btn');
     const prevMonthBtn = document.getElementById('prev-month-btn');
 
-    // Limite de navigation : 1 an à partir de décembre 2025
-    const limitDate = new Date('2025-12-01');
-    limitDate.setFullYear(limitDate.getFullYear() + 1);
+    // Limites de navigation sur un an, de Septembre 2025 à Août 2026
+    const minNavDate = new Date(2025, 8, 1); // Septembre 2025
+    const maxNavDate = new Date(2026, 7, 1); // Août 2026
 
-    // Désactiver le bouton "suivant" si on atteint la limite (Novembre 2026)
-    if (currentCalendarDate.getFullYear() === limitDate.getFullYear() && currentCalendarDate.getMonth() === limitDate.getMonth() -1) {
+    // Désactiver le bouton "précédent" si on est au mois minimum
+    if (currentCalendarDate.getFullYear() <= minNavDate.getFullYear() && currentCalendarDate.getMonth() <= minNavDate.getMonth()) {
+        prevMonthBtn.disabled = true;
+    } else {
+        prevMonthBtn.disabled = false;
+    }
+
+    // Désactiver le bouton "suivant" si on est au mois maximum
+    if (currentCalendarDate.getFullYear() >= maxNavDate.getFullYear() && currentCalendarDate.getMonth() >= maxNavDate.getMonth()) {
         nextMonthBtn.disabled = true;
+    } else {
+        nextMonthBtn.disabled = false;
     }
 
     nextMonthBtn.addEventListener('click', () => {
