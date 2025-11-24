@@ -2,6 +2,7 @@
 const WEBHOOK_URL = 'https://hook.eu1.make.com/hnafrokq43x9kb3ls450r4fw7injhdgi';
 let lastPayload = null; // Dernier payload envoyé (pour debug / copie)
 let debugPayloadPre = null; // Élément <pre> pour le payload (pour debug)
+
 // Génération d'ID unique
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -30,30 +31,21 @@ function startChat(nameValue) {
     const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
     const clientNameInput = document.getElementById('clientNameInput');
     const validateNameBtn = document.getElementById('validateNameBtn');
-
+    
     if (nameValue) {
         clientName = nameValue;
-
         // Mettre à jour le nom affiché dans l'en-tête (si nécessaire)
         if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
-
         // Activer la zone de saisie de message
         messageInput.disabled = false;
         
         // Mettre à jour les textes d'aide
         if (inputHelperText) inputHelperText.textContent = '';
         messageInput.placeholder = 'Écrivez votre message...';
-
         // Afficher le premier message de l'utilisateur de manière progressive, sans l'envoyer à Make
         displayProgressively("Bonjour, je voudrais passer une commande.", 'ai');
     }
 }
-
-
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Éléments du DOM ---
@@ -72,11 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
     const clientNameInput = document.getElementById('clientNameInput');
     const validateNameBtn = document.getElementById('validateNameBtn');
-
+    
     // --- Événements ---
     if (sendBtn) {
         sendBtn.addEventListener('click', sendMessage);
     }
+    
     if (messageInput) {
         messageInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -85,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+    
     if (debugToggle) {
         debugToggle.addEventListener('click', () => {
             const isHidden = debugPanel.hasAttribute('hidden');
@@ -93,41 +87,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             debugToggle.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
         });
     }
-
+    
     if (clientNameInput && validateNameBtn) {
         // Activer le bouton "Valider" seulement si du texte est présent
         clientNameInput.addEventListener('input', () => {
             validateNameBtn.disabled = !clientNameInput.value.trim();
         });
-
+        
         // Logique du clic sur le bouton "Valider"
         validateNameBtn.addEventListener('click', () => {
             const nameValue = clientNameInput.value.trim();
             if (nameValue) {
                 clientName = nameValue;
-
                 // 1. Mettre à jour le nom affiché dans l'en-tête
                 if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
-
                 // 2. Activer la zone de saisie de message
                 messageInput.disabled = false;
                 
                 // 3. Mettre à jour les textes d'aide
                 if (inputHelperText) inputHelperText.textContent = '';
                 messageInput.placeholder = 'Écrivez votre message...';
-
                 // 4. Désactiver la section de saisie du nom
                 clientNameInput.disabled = true;
                 validateNameBtn.disabled = true;
                 
                 // 5. Envoyer le nom à Make et afficher le premier message
                 messageInput.focus();
-
                 // 6. Démarrer le chat pour afficher le message de bienvenue
                 startChat(nameValue);
             }
         });
-
+        
         // Permettre de valider avec la touche "Entrée"
         clientNameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -135,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 validateNameBtn.click(); // Simule un clic sur le bouton
             }
         });
-
+        
         // Activer le bouton "Envoyer" uniquement si du texte est présent
         messageInput.addEventListener('input', () => {
             if (messageInput.value.trim() !== '') {
@@ -149,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-
+    
     if (copyPayloadBtn) {
         copyPayloadBtn.addEventListener('click', async () => {
             if (!lastPayload) {
@@ -173,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-
+    
     // Initialise le calendrier
     renderCalendar(new Date(2025, 10, 5)); // Initialise le calendrier en Novembre 2025
 });
@@ -188,26 +178,24 @@ let currentCalendarDate = new Date();
 function renderCalendar(dateToShow) {
     const calendarContainer = document.getElementById('calendar-container');
     if (!calendarContainer) return;
-
+    
     currentCalendarDate = new Date(dateToShow); // Utilise la date passée pour le mois et l'année affichés
     const month = currentCalendarDate.getMonth();
     const year = currentCalendarDate.getFullYear();
-
+    
     // La date fixe à surligner (5 décembre 2025)
     const highlightDay = 5;
     const highlightMonth = 11; // Décembre est le 11ème mois (0-indexé)
     const highlightYear = 2025;
-
-
+    
     const firstDayOfMonth = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-
     let startingDay = firstDayOfMonth.getDay();
     startingDay = (startingDay === 0) ? 6 : startingDay - 1; // Lundi = 0, Dimanche = 6
-
+    
     const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
     const dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-
+    
     let html = `
         <div class="calendar-header">
             <button id="prev-month-btn" class="calendar-nav-btn">‹</button>
@@ -216,54 +204,53 @@ function renderCalendar(dateToShow) {
         </div>
         <div class="calendar-grid">
     `;
-
+    
     dayNames.forEach(day => {
         html += `<div class="calendar-cell calendar-day-name">${day}</div>`;
     });
-
+    
     for (let i = 0; i < startingDay; i++) {
         html += `<div class="calendar-cell"></div>`;
     }
-
+    
     for (let day = 1; day <= daysInMonth; day++) {
         // Le jour est-il celui à surligner ?
         const isToday = (day === highlightDay && month === highlightMonth && year === highlightYear);
         const dayOfWeek = (new Date(year, month, day).getDay() + 6) % 7; // 0 (Lundi) à 6 (Dimanche)
         const isMonday = dayOfWeek === 0;
-
         html += `<div class="calendar-cell calendar-date ${isToday ? 'today' : ''} ${isMonday ? 'monday' : ''}">${day}</div>`;
     }
-
+    
     html += `</div>`;
     calendarContainer.innerHTML = html;
-
+    
     // --- Logique de navigation ---
     const nextMonthBtn = document.getElementById('next-month-btn');
     const prevMonthBtn = document.getElementById('prev-month-btn');
-
+    
     // Limites de navigation sur un an, de novembre 2025 à novembre 2026
     const minNavDate = new Date(2025, 10, 1); // Novembre 2025
     const maxNavDate = new Date(2026, 10, 1); // Novembre 2026
-
+    
     // Désactiver le bouton "précédent" si on est au mois minimum
     if (currentCalendarDate.getFullYear() <= minNavDate.getFullYear() && currentCalendarDate.getMonth() <= minNavDate.getMonth()) {
         prevMonthBtn.disabled = true;
     } else {
         prevMonthBtn.disabled = false;
     }
-
+    
     // Désactiver le bouton "suivant" si on est au mois maximum
     if (currentCalendarDate.getFullYear() >= maxNavDate.getFullYear() && currentCalendarDate.getMonth() >= maxNavDate.getMonth()) {
         nextMonthBtn.disabled = true;
     } else {
         nextMonthBtn.disabled = false;
     }
-
+    
     nextMonthBtn.addEventListener('click', () => {
         currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
         renderCalendar(currentCalendarDate);
     });
-
+    
     prevMonthBtn.addEventListener('click', () => {
         currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
         renderCalendar(currentCalendarDate);
@@ -325,13 +312,13 @@ async function initializeChatbot() {
             } catch (e) {
                 console.warn('initializeChatbot: impossible de parser la réponse', e);
             }
-
             // Adapter selon la structure de votre réponse Make
             if (data) {
                 if (data.chatbotName) chatbotName = data.chatbotName;
                 if (data.name) chatbotName = data.name;
                 if (data.clientName) {
                     clientName = data.clientName;                    
+                    const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
                     if (clientNameDisplay) clientNameDisplay.dataset.clientName = clientName;
                 }
             }
@@ -374,13 +361,39 @@ async function sendInitToMake(clientName) {
     }
 }
 
+/**
+ * Affiche l'indicateur de frappe
+ */
+function showTypingIndicator() {
+    const chatBox = document.getElementById('chatBox');
+    const typingId = 'typing-' + Date.now();
+    
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message ai';
+    typingDiv.id = typingId;
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble typing-indicator';
+    bubble.innerHTML = '<span></span><span></span><span></span>';
+    bubble.innerHTML = '<div class="dot-flashing"></div>';
+    
+    typingDiv.appendChild(bubble);
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    return typingId;
+}
 
 /**
  * Envoie un message au webhook Make
  */
 async function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
     const message = messageInput.value.trim();
+    
     if (!message) return;
+    
     if (WEBHOOK_URL === 'YOUR_MAKE_WEBHOOK_URL_HERE') {
         alert('⚠️ Veuillez configurer votre URL webhook Make dans script.js');
         return;
@@ -395,7 +408,7 @@ async function sendMessage() {
     
     // Afficher l'indicateur "IA est en train d'écrire..."
     const typingId = showTypingIndicator();
-
+    
     try {
         // Préparer le payload afin de pouvoir le réutiliser pour un retry
         const payload = {
@@ -407,10 +420,11 @@ async function sendMessage() {
             message: message,
             timestamp: new Date().toISOString()
         };
-
+        
         // Envoyer le message au webhook
         lastPayload = payload; // stocker pour debug/copier
         if (debugPayloadPre) debugPayloadPre.textContent = JSON.stringify(lastPayload, null, 2);
+        
         let response = await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: {
@@ -418,32 +432,33 @@ async function sendMessage() {
             },
             body: JSON.stringify(payload)
         });
-
+        
         const status = response.status;
         const statusText = response.statusText;
         const ct = response.headers.get('content-type') || '';
-
+        
         // Remplir le panneau de debug headers
         const headersObj = {};
         try { for (const [k, v] of response.headers.entries()) headersObj[k] = v; } catch (e) {}
-
+        
         // Lire le corps en raw (ArrayBuffer) pour gérer text/plain, JSON, ou contenu non imprimable
         let attempt = 0;
         let buffer = null;
         let text = '';
         let data = null;
         let bodyLength = 0;
-
+        
         while (true) {
             try {
                 buffer = await response.arrayBuffer().catch(() => null);
                 bodyLength = buffer ? buffer.byteLength : 0;
+                
                 if (buffer) {
                     try { text = new TextDecoder('utf-8').decode(buffer); } catch (e) { text = ''; }
                 } else {
                     text = '';
                 }
-
+                
                 // tenter JSON si content-type JSON ou si le texte commence par '{' ou '['
                 const looksLikeJson = (ct.includes('application/json') || text.trim().startsWith('{') || text.trim().startsWith('['));
                 if (looksLikeJson && text.trim().length > 0) {
@@ -453,16 +468,17 @@ async function sendMessage() {
                         data = null;
                     }
                 }
-
+                
                 // si on a quelque chose d'utile (JSON parsé ou texte non vide) -> sortir
                 if ( (data && typeof data === 'object') || (text && text.trim().length > 0) ) break;
-
+                
                 // sinon, si corps vide et tentative possible -> retry
                 if (bodyLength === 0 && attempt < MAX_EMPTY_BODY_RETRIES) {
                     attempt++;
                     console.warn(`Réponse vide reçue (attempt ${attempt}). Retente dans 1s...`);
                     setDebugInfo(status, ct, headersObj, '(empty body)');
                     await sleep(1000);
+                    
                     response = await fetch(WEBHOOK_URL, {
                         method: 'POST',
                         headers: {
@@ -471,13 +487,14 @@ async function sendMessage() {
                         },
                         body: JSON.stringify(payload)
                     });
+                    
                     // mettre à jour headersObj/status/ct
                     try { for (const [k, v] of response.headers.entries()) headersObj[k] = v; } catch (e) {}
                     // update locals
                     bodyLength = 0; text = ''; data = null;
                     continue;
                 }
-
+                
                 // si corps non imprimable (length>0 mais text empty) -> afficher info et arrêter
                 if (bodyLength > 0 && (!text || !text.trim())) {
                     // transformer en base64 pour affichage
@@ -488,19 +505,21 @@ async function sendMessage() {
                         for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
                         base64 = btoa(binary);
                     } catch (e) { base64 = '(non-encodable)'; }
+                    
                     setDebugInfo(status, ct, headersObj, `(binary body, length ${bodyLength})\nbase64: ${base64}`);
                     console.error('Réponse non-textuelle reçue de Make, bodyLength:', bodyLength);
                     removeTypingIndicator(typingId);
                     addMessage("❌ Erreur : Make a renvoyé un contenu non textuel. Voir debug pour détails.", 'ai');
                     return;
                 }
-
+                
                 // si on arrive ici, corps vide ou non-JSON -> afficher message d'erreur
                 setDebugInfo(status, ct, headersObj, text || '(empty body)');
                 console.error('Erreur: Make n\'a pas renvoyé de JSON ou de texte utile. Statut:', status, statusText, 'Content-Type:', ct, 'bodyLength:', bodyLength);
                 removeTypingIndicator(typingId);
                 addMessage("❌ Erreur : réponse vide ou non-JSON reçue de Make. Voir la console pour les détails.", 'ai');
                 return;
+                
             } catch (err) {
                 console.error('Erreur lors de la lecture du body:', err);
                 removeTypingIndicator(typingId);
@@ -508,18 +527,18 @@ async function sendMessage() {
                 return;
             }
         }
-
+        
         // Mettre à jour le debug panel avec le texte ou le JSON reçu
         const debugBodyText = data ? JSON.stringify(data, null, 2) : (text || '(empty body)');
         setDebugInfo(status, ct, headersObj, debugBodyText);
-
+        
         if (!response.ok) {
             console.error('Erreur HTTP reçue de Make:', status, statusText, data || text);
             removeTypingIndicator(typingId);
             addMessage(`❌ Erreur HTTP ${status} reçue de Make. Voir console pour détails.`, 'ai');
             return;
         }
-
+        
         // Déterminer la réponse à afficher : priorité au JSON.reply, sinon texte brut
         let replyText = null;
         if (data && typeof data.reply === 'string') replyText = data.reply;
@@ -533,6 +552,7 @@ async function sendMessage() {
             removeTypingIndicator(typingId);
             addMessage('❌ Erreur : la réponse de Make est vide ou ne contient pas de champ "reply". Voir la console.', 'ai');
         }
+        
     } catch (error) {
         console.error('Erreur sendMessage:', error);
         removeTypingIndicator(typingId);
@@ -545,58 +565,54 @@ async function sendMessage() {
 }
 
 /**
- * Ajoute un message au chat
+ * Nettoie le HTML pour éviter les injections de code malveillant
  */
-function addMessage(text, sender) {
-    messageCounter++;
-    const messageId = `${conversationId}-msg-${messageCounter}`;
+function sanitizeHTML(html) {
+    // Créer un élément temporaire
+    const temp = document.createElement('div');
+    temp.textContent = html;
     
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
-    messageDiv.id = messageId;
-    messageDiv.setAttribute('data-message-id', messageId);
-    messageDiv.setAttribute('data-conversation-id', conversationId);
-    messageDiv.setAttribute('data-chatbot-name', chatbotName);
-    messageDiv.setAttribute('data-timestamp', new Date().toISOString());
+    // Autoriser uniquement certaines balises sûres
+    const allowedTags = ['h3', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'p', 'strong', 'span', 'br'];
+    const cleaned = temp.innerHTML;
     
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    bubble.textContent = text;
+    // Vérifier si le contenu contient des balises HTML
+    if (/<[a-z][\s\S]*>/i.test(html)) {
+        // C'est du HTML, on le retourne tel quel (Make est la source de confiance)
+        return html;
+    }
     
-    messageDiv.appendChild(bubble);
-    chatBox.appendChild(messageDiv);
-    
-    // Afficher les IDs dans la console pour le suivi
-    console.log(`Message ID: ${messageId}`);
-    console.log(`Conversation ID: ${conversationId}`);
-    console.log(`Chatbot Name: ${chatbotName}`);
-    
-    // Scroll automatique vers le bas
-    chatBox.scrollTop = chatBox.scrollHeight;
+    // Sinon, c'est du texte brut, on l'échappe
+    return cleaned;
 }
 
 /**
- * Affiche un indicateur "IA est en train d'écrire..."
+ * Ajoute un message au chat
  */
-function showTypingIndicator() {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message ai';
-    messageDiv.id = 'typing-' + Date.now();
+function addMessage(text, type) {
+    const chatBox = document.getElementById('chatBox');
+    const bubble = document.createElement('div');
+    bubble.className = type === 'user' ? 'message user' : 'message ai';
     
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'typing-indicator';
+    const content = document.createElement('div');
+    content.className = 'bubble';
     
-    for (let i = 0; i < 3; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'typing-dot';
-        typingDiv.appendChild(dot);
+    if (type === 'user') {
+        content.textContent = text;
+    } else {
+        // Si le texte contient du HTML (détecté par la présence de balises)
+        if (text.includes('<') && text.includes('>')) {
+            // Afficher directement le HTML complet
+            content.innerHTML = text;
+        } else {
+            // Pour le texte simple, on l'affiche directement aussi (pas d'effet de frappe ici)
+            content.textContent = text;
+        }
     }
     
-    messageDiv.appendChild(typingDiv);
-    chatBox.appendChild(messageDiv);
+    bubble.appendChild(content);
+    chatBox.appendChild(bubble);
     chatBox.scrollTop = chatBox.scrollHeight;
-    
-    return messageDiv.id;
 }
 
 /**
@@ -610,9 +626,10 @@ function removeTypingIndicator(typingId) {
 }
 
 /**
- * Affiche la réponse progressivement (lettre par lettre)
+ * Affiche la réponse progressivement (lettre par lettre) ou directement si HTML
  */
 async function displayProgressively(text, sender) {
+    const chatBox = document.getElementById('chatBox');
     messageCounter++;
     const messageId = `${conversationId}-msg-${messageCounter}`;
     
@@ -626,7 +643,6 @@ async function displayProgressively(text, sender) {
     
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = '';
     
     messageDiv.appendChild(bubble);
     chatBox.appendChild(messageDiv);
@@ -636,16 +652,18 @@ async function displayProgressively(text, sender) {
     console.log(`Conversation ID: ${conversationId}`);
     console.log(`Chatbot Name: ${chatbotName}`);
     
-    // Vitesse d'affichage (en millisecondes)
-    const speed = 20;
-    
-    for (let i = 0; i < text.length; i++) {
-        bubble.textContent += text[i];
-        
-        // Scroll automatique
+    // Si c'est du HTML (détecté par la présence de balises)
+    if (text.includes('<') && text.includes('>')) {
+        // Afficher directement le HTML complet
+        bubble.innerHTML = text;
         chatBox.scrollTop = chatBox.scrollHeight;
-        
-        // Attendre avant d'ajouter le caractère suivant
-        await new Promise(resolve => setTimeout(resolve, speed));
+    } else {
+        // Effet de frappe pour texte simple
+        const speed = 20;
+        for (let i = 0; i < text.length; i++) {
+            bubble.textContent += text[i];
+            chatBox.scrollTop = chatBox.scrollHeight;
+            await new Promise(resolve => setTimeout(resolve, speed));
+        }
     }
 }

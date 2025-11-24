@@ -1,15 +1,16 @@
-/* Import Open Sans depuis Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+/* Import Georgia (système) et fallback serif */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&display=swap');
 
-/* Réinitialisation et variables de palette */
+/* Palette La Pâtisserie des Brotteaux */
 :root {
-    --primary: #790B87;   /* couleur principale foncée */
-    --accent:  #C39CC8;   /* couleur bouton / user */
-    --muted:   #AC78B2;   /* couleur secondaire */
-    --light:   #EBDFED;   /* fond clair */
-    --highlight:#CF9AD6;  /* accent léger */
-    --white:   #FFFFFF;
-    --text:    #222222;
+    --primary: #2c2c2c;      /* Noir élégant */
+    --accent: #d4a574;       /* Or pâtissier */
+    --secondary: #8b7355;    /* Caramel doux */
+    --light: #f5f0e8;        /* Crème vanille */
+    --white: #fafaf8;        /* Blanc cassé */
+    --gradient-start: #f0c8a0;
+    --gradient-end: #d4a574;
+    --text: #2c2c2c;
 }
 
 * {
@@ -24,14 +25,15 @@ html, body {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
-    background-color: var(--light);
+    font-family: Georgia, 'Bodoni Moda', 'Times New Roman', serif;
+    background-color: var(--white);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
     color: var(--text);
+    line-height: 1.8;
 }
 
 /* Wrapper à deux colonnes */
@@ -41,7 +43,7 @@ body {
     margin: 20px auto;
     padding: 0 20px;
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: flex-start;
     height: auto;
     min-height: calc(100vh - 140px);
@@ -53,17 +55,18 @@ body {
     display: flex;
     flex-direction: column;
     background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
     overflow: hidden;
     height: auto;
     max-height: calc(100vh - 140px);
     min-width: 0;
+    border: 1px solid rgba(212, 165, 116, 0.15);
 }
 
 /* Colonne droite : Info boutique (sticky) */
 .info-column {
-    width: 280px;
+    width: 300px;
     flex-shrink: 0;
     position: sticky;
     top: 20px;
@@ -73,206 +76,447 @@ body {
 
 .container {
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     height: auto;
     max-height: calc(100vh - 140px);
     background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     margin: 20px auto;
+    border: 1px solid rgba(212, 165, 116, 0.15);
 }
 
 .header {
     background-color: var(--primary);
     color: var(--white);
-    padding: 18px 20px;
+    padding: 24px 28px;
     text-align: center;
-    border-bottom: 3px solid var(--highlight);
+    border-bottom: 2px solid var(--accent);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.header-main { display:flex; flex-direction:column; align-items:center; flex:1; }
-.header h1 { font-size:22px; font-weight:700; margin-bottom:4px; }
-.subtitle { font-size:12px; font-weight:400; opacity:.95; }
-.header-actions { display:none; }
+.header-main { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    flex: 1; 
+}
+
+.header h1 { 
+    font-size: 26px; 
+    font-weight: 400; 
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-family: 'Bodoni Moda', Georgia, serif;
+}
+
+.subtitle { 
+    font-size: 13px; 
+    font-weight: 400; 
+    opacity: 0.92;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.header-actions { 
+    display: none; 
+}
 
 /* Champ de saisie du nom client */
 .name-input-section { 
-    padding: 14px 20px; 
-    background: linear-gradient(135deg, rgba(207,154,214,0.08), rgba(171,120,178,0.06));
-    border-bottom: 2px solid var(--highlight);
-    border-radius: 6px 6px 0 0;
+    padding: 18px 24px; 
+    background: linear-gradient(135deg, rgba(240, 200, 160, 0.12), rgba(212, 165, 116, 0.08));
+    border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+    border-radius: 12px 12px 0 0;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: flex-end;
 }
+
 .name-input { 
     flex: 1;
-    padding: 12px 14px; 
-    border: 2px solid var(--muted);
-    border-radius: 6px; 
-    font-size: 14px; 
-    font-family: 'Open Sans', sans-serif; 
-    transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
-    background-color: rgba(235, 223, 237, 0.5);
+    padding: 14px 18px; 
+    border: 2px solid rgba(139, 115, 85, 0.3);
+    border-radius: 10px; 
+    font-size: 15px; 
+    font-family: Georgia, serif; 
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    background-color: var(--white);
 }
+
 .name-input:focus { 
     outline: none; 
-    border-color: var(--primary);
+    border-color: var(--accent);
     background-color: var(--white);
-    box-shadow: 0 0 0 4px rgba(121,11,135,0.12);
+    box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.15);
 }
+
 .name-input::placeholder { 
-    color: #999;
-    font-weight: 500;
+    color: var(--secondary);
+    font-weight: 400;
+    font-style: italic;
 }
+
 .name-input-error {
-    border-color: #e74c3c;
-    background-color: rgba(231,76,60,0.08);
-    box-shadow: 0 0 0 3px rgba(231,76,60,0.1);
+    border-color: #c0392b;
+    background-color: rgba(192, 57, 43, 0.05);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
 }
+
 .validate-name-btn {
-    padding: 10px 20px;
-    background: var(--primary);
+    padding: 12px 24px;
+    background: var(--accent);
     color: var(--white);
     border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: transform 0.18s, box-shadow 0.18s, opacity 0.25s;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background-color 0.3s;
     white-space: nowrap;
+    letter-spacing: 0.5px;
 }
-.validate-name-btn:hover {
+
+.validate-name-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(121,11,135,0.2);
+    box-shadow: 0 6px 16px rgba(212, 165, 116, 0.25);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
 }
-.validate-name-btn:active {
-    transform: none;
+
+.validate-name-btn:active:not(:disabled) {
+    transform: translateY(0);
 }
+
 .validate-name-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
 /* Encadré d'information boutique */
 .info-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), var(--light));
-    border-left: 4px solid var(--highlight);
-    padding: 14px 16px;
+    background: linear-gradient(180deg, var(--white), var(--light));
+    border-left: 3px solid var(--accent);
+    padding: 20px 22px;
     margin: 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    font-size: 12px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(44, 44, 44, 0.06);
+    font-size: 13px;
     color: var(--text);
 }
-.info-card-logo { height: 100px; width: auto; margin-bottom: 10px; display: block; border-radius: 4px; }
-.info-card h3 { margin: 0 0 8px 0; font-size: 15px; color: var(--primary); }
-.info-card ul { margin: 6px 0 0 18px; padding: 0; font-size: 11px; }
-.info-card p { margin: 5px 0; font-size: 11px; }
 
+.info-card-logo { 
+    height: 120px; 
+    width: auto; 
+    margin-bottom: 16px; 
+    display: block; 
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(44, 44, 44, 0.08);
+}
+
+.info-card h3 { 
+    margin: 0 0 12px 0; 
+    font-size: 17px; 
+    color: var(--primary);
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.info-card ul { 
+    margin: 8px 0 0 20px; 
+    padding: 0; 
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.info-card p { 
+    margin: 8px 0; 
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.info-card strong {
+    color: var(--secondary);
+    font-weight: 600;
+}
 
 .chat-box {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: 28px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 18px;
     background: var(--white);
 }
 
-.chat-box::-webkit-scrollbar { width:6px; }
+.chat-box::-webkit-scrollbar { width: 8px; }
 .chat-box::-webkit-scrollbar-track { background: var(--light); }
-.chat-box::-webkit-scrollbar-thumb { background: var(--accent); border-radius:3px; }
-.chat-box::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+.chat-box::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+.chat-box::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
 
-.message { display:flex; animation: slideIn .28s ease-out; }
-@keyframes slideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-.message.user { justify-content:flex-end }
-.message.ai { justify-content:flex-start }
+.message { 
+    display: flex; 
+    animation: slideIn 0.35s ease-out; 
+}
+
+@keyframes slideIn { 
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    } 
+    to {
+        opacity: 1;
+        transform: none;
+    } 
+}
+
+.message.user { justify-content: flex-end; }
+.message.ai { justify-content: flex-start; }
 
 .bubble {
-    max-width:75%; padding:12px 16px; border-radius:12px; word-wrap:break-word;
-    font-size:14px; line-height:1.5; font-weight:400;
-}
-.message.user .bubble { background: var(--accent); color: var(--white); border-bottom-right-radius:4px; box-shadow:0 1px 3px rgba(172,120,178,0.12); }
-.message.ai .bubble   { background: var(--primary); color: var(--white); border-bottom-left-radius:4px; box-shadow:0 1px 3px rgba(121,11,135,0.12); }
-
-.typing-indicator { display:flex; gap:6px; align-items:center; padding:10px 14px; background:var(--primary); border-radius:12px; width:fit-content; }
-.typing-dot { width:8px; height:8px; background:var(--white); border-radius:50%; animation:typing 1.4s infinite; opacity:.8 }
-.typing-dot:nth-child(2){animation-delay:.2s} .typing-dot:nth-child(3){animation-delay:.4s}
-@keyframes typing{0%,60%,100%{opacity:.5;transform:translateY(0)}30%{opacity:1;transform:translateY(-6px)}}
-
-.input-area-wrapper { display: flex; flex-direction: column; padding: 0; background: var(--white); border-top: 1px solid rgba(0,0,0,0.04); flex-shrink: 0; }
-.input-helper-text { font-size: 11px; color: #999; padding: 8px 15px 0; margin: 0; }
-.input-area { display: flex; gap: 10px; padding: 10px 15px 15px 15px; background: var(--white); flex-shrink: 0; }
-.disclaimer-text { font-size: 10px; color: #999; padding: 0 15px 10px; margin: 0; font-style: italic; text-align: center; }
-#messageInput { flex: 1; padding: 12px 16px; border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s, opacity 0.25s; }
-#messageInput:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(195,156,200,0.08); }
-#messageInput:disabled { background-color: rgba(0,0,0,0.04); color: #999; cursor: not-allowed; opacity: 0.6; }
-#messageInput::placeholder{ color: #9b9b9b }
-
-#sendBtn { padding: 12px 24px; background: var(--accent); color: var(--white); border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.18s, box-shadow 0.18s, opacity 0.25s; }
-#sendBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(195,156,200,0.18); }
-#sendBtn:active:not(:disabled) { transform: none; }
-#sendBtn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-#debugPanel { position:fixed; right:20px; bottom:20px; width:360px; max-height:60vh; overflow:auto; background:rgba(255,255,255,0.98); color:var(--text); border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,0.08); padding:12px; z-index:1000; font-size:12px; font-family:monospace; border:1px solid var(--highlight) }
-#debugPanel h3{ margin-bottom:8px; font-size:13px; color:var(--primary) }
-#debugPanel pre{ background:var(--light); padding:8px; border-left:3px solid var(--highlight); border-radius:4px; overflow:auto; max-height:120px; font-size:11px }
-.debug-toggle{ background:rgba(195,156,200,0.12); color:var(--primary); border:1px solid var(--highlight); padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:600 }
-.debug-toggle:hover{ background:var(--accent); color:var(--white) }
-
-footer { background:var(--accent); color:var(--white); text-align:center; padding:15px 20px; font-size:12px; font-weight:400; flex-shrink:0 }
-footer p{ margin:0 }
-
-@media (max-width:1024px){
-  .wrapper { flex-direction: column; gap: 15px; }
-  .chat-column { max-height: none; }
-  .info-column { width: 100%; position: static; max-height: none; }
+    max-width: 75%; 
+    padding: 16px 22px; 
+    border-radius: 18px; 
+    word-wrap: break-word;
+    font-size: 15px; 
+    line-height: 1.7; 
+    font-weight: 400;
 }
 
-@media (max-width:640px){
-  .wrapper { padding: 0 10px; margin: 10px auto; gap: 10px; }
-  .chat-column { border-radius: 0; max-height: none; }
-  .info-column { width: 100%; }
-  .header h1 { font-size: 18px; }
-  .bubble { max-width: 85%; padding: 10px 14px; font-size: 13px; }
-  .input-area { gap: 8px; padding: 12px; }
-  #messageInput { padding: 10px 12px; font-size: 13px; }
-  #sendBtn { padding: 10px 18px; font-size: 13px; }
-  #debugPanel { right: 10px; bottom: 10px; width: calc(100% - 20px); }
-  .chat-box { padding: 15px; gap: 10px; }
+.message.user .bubble { 
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color: var(--white); 
+    border-bottom-right-radius: 6px; 
+    box-shadow: 0 3px 12px rgba(212, 165, 116, 0.18);
 }
 
-@media (max-width:360px){
-  .header h1 { font-size: 16px; }
-  .subtitle { font-size: 11px; }
-  .bubble { max-width: 90%; padding: 8px 12px; font-size: 12px; }
-  #sendBtn { padding: 8px 14px; font-size: 12px; }
+.message.ai .bubble { 
+    background: var(--light);
+    color: var(--primary); 
+    border-bottom-left-radius: 6px; 
+    box-shadow: 0 3px 12px rgba(44, 44, 44, 0.06);
+    border: 1px solid rgba(139, 115, 85, 0.12);
+}
+
+.typing-indicator { 
+    display: flex; 
+    gap: 8px; 
+    align-items: center; 
+    padding: 14px 20px; 
+    background: var(--light); 
+    border-radius: 18px; 
+    width: fit-content;
+    border: 1px solid rgba(139, 115, 85, 0.12);
+}
+
+.typing-dot { 
+    width: 9px; 
+    height: 9px; 
+    background: var(--accent); 
+    border-radius: 50%; 
+    animation: typing 1.4s infinite; 
+    opacity: 0.7;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% {
+        opacity: 0.4;
+        transform: translateY(0);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(-8px);
+    }
+}
+
+.input-area-wrapper { 
+    display: flex; 
+    flex-direction: column; 
+    padding: 0; 
+    background: var(--white); 
+    border-top: 1px solid rgba(139, 115, 85, 0.15); 
+    flex-shrink: 0; 
+}
+
+.input-helper-text { 
+    font-size: 12px; 
+    color: var(--secondary); 
+    padding: 10px 20px 0; 
+    margin: 0;
+    font-style: italic;
+}
+
+.input-area { 
+    display: flex; 
+    gap: 12px; 
+    padding: 16px 20px 20px 20px; 
+    background: var(--white); 
+    flex-shrink: 0; 
+}
+
+.disclaimer-text { 
+    font-size: 11px; 
+    color: var(--secondary); 
+    padding: 0 20px 14px; 
+    margin: 0; 
+    font-style: italic; 
+    text-align: center;
+    line-height: 1.6;
+}
+
+#messageInput { 
+    flex: 1; 
+    padding: 14px 20px; 
+    border: 2px solid rgba(139, 115, 85, 0.2); 
+    border-radius: 10px; 
+    font-size: 15px; 
+    outline: none; 
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, opacity 0.3s;
+    font-family: Georgia, serif;
+    background-color: var(--white);
+}
+
+#messageInput:focus { 
+    border-color: var(--accent); 
+    box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.12); 
+}
+
+#messageInput:disabled { 
+    background-color: rgba(139, 115, 85, 0.05); 
+    color: var(--secondary); 
+    cursor: not-allowed; 
+    opacity: 0.6; 
+}
+
+#messageInput::placeholder { 
+    color: var(--secondary);
+    font-style: italic;
+}
+
+#sendBtn { 
+    padding: 14px 28px; 
+    background: var(--accent); 
+    color: var(--white); 
+    border: none; 
+    border-radius: 10px; 
+    font-size: 15px; 
+    font-weight: 500; 
+    cursor: pointer; 
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background 0.3s;
+    letter-spacing: 0.5px;
+}
+
+#sendBtn:hover:not(:disabled) { 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.25);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
+
+#sendBtn:active:not(:disabled) { 
+    transform: translateY(0); 
+}
+
+#sendBtn:disabled { 
+    opacity: 0.4; 
+    cursor: not-allowed; 
+}
+
+#debugPanel { 
+    position: fixed; 
+    right: 20px; 
+    bottom: 20px; 
+    width: 380px; 
+    max-height: 60vh; 
+    overflow: auto; 
+    background: rgba(255, 255, 255, 0.98); 
+    color: var(--text); 
+    border-radius: 12px; 
+    box-shadow: 0 8px 24px rgba(44, 44, 44, 0.12); 
+    padding: 16px; 
+    z-index: 1000; 
+    font-size: 12px; 
+    font-family: 'Courier New', monospace;
+    border: 1px solid var(--accent);
+}
+
+#debugPanel h3 { 
+    margin-bottom: 10px; 
+    font-size: 14px; 
+    color: var(--primary);
+    font-family: Georgia, serif;
+    font-weight: 500;
+}
+
+#debugPanel pre { 
+    background: var(--light); 
+    padding: 10px; 
+    border-left: 3px solid var(--accent); 
+    border-radius: 6px; 
+    overflow: auto; 
+    max-height: 140px; 
+    font-size: 11px;
+}
+
+.debug-toggle { 
+    background: rgba(212, 165, 116, 0.15); 
+    color: var(--primary); 
+    border: 1px solid var(--accent); 
+    padding: 8px 14px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-weight: 500;
+    font-family: Georgia, serif;
+    transition: all 0.3s;
+}
+
+.debug-toggle:hover { 
+    background: var(--accent); 
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+footer { 
+    background: var(--primary); 
+    color: var(--white); 
+    text-align: center; 
+    padding: 18px 24px; 
+    font-size: 13px; 
+    font-weight: 400; 
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+
+footer p { 
+    margin: 0; 
 }
 
 /* --- Calendrier --- */
 .calendar-container {
-    margin-top: 20px;
+    margin-top: 24px;
     background: var(--white);
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(44, 44, 44, 0.06);
+    border: 1px solid rgba(212, 165, 116, 0.15);
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     color: var(--primary);
 }
 
@@ -280,58 +524,163 @@ footer p{ margin:0 }
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 24px;
-    color: var(--muted);
-    padding: 0 8px;
-    transition: color 0.2s;
-    font-weight: bold;
+    font-size: 26px;
+    color: var(--secondary);
+    padding: 0 10px;
+    transition: color 0.3s, transform 0.2s;
+    font-weight: 400;
 }
 
 .calendar-nav-btn:hover:not(:disabled) {
-    color: var(--primary);
+    color: var(--accent);
+    transform: scale(1.1);
 }
+
 .calendar-nav-btn:disabled {
-    color: #ccc;
+    color: #d0d0d0;
     cursor: not-allowed;
 }
 
 .calendar-header h4 {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 17px;
+    font-weight: 500;
     margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 6px;
 }
 
 .calendar-cell {
     text-align: center;
-    padding: 8px 0;
-    font-size: 12px;
-    font-weight: 600;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .calendar-day-name {
-    color: var(--muted);
+    color: var(--secondary);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .calendar-date.today {
-    background-color: var(--primary);
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
     color: var(--white);
     border-radius: 50%;
+    font-weight: 600;
 }
 
 .calendar-date.monday {
-    background-color: var(--accent);
-    color: var(--white);
+    background-color: var(--light);
+    color: var(--primary);
     border-radius: 50%;
+    border: 2px solid var(--accent);
 }
 
 .calendar-date.delivery-day {
-    background-color: var(--highlight);
+    background-color: rgba(212, 165, 116, 0.2);
+    border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .wrapper { 
+        flex-direction: column; 
+        gap: 20px; 
+    }
+    .chat-column { 
+        max-height: none; 
+    }
+    .info-column { 
+        width: 100%; 
+        position: static; 
+        max-height: none; 
+    }
+}
+
+@media (max-width: 640px) {
+    .wrapper { 
+        padding: 0 12px; 
+        margin: 12px auto; 
+        gap: 12px; 
+    }
+    
+    .chat-column { 
+        border-radius: 8px; 
+        max-height: none; 
+    }
+    
+    .info-column { 
+        width: 100%; 
+    }
+    
+    .header h1 { 
+        font-size: 20px;
+        letter-spacing: 1.5px;
+    }
+    
+    .subtitle {
+        font-size: 12px;
+    }
+    
+    .bubble { 
+        max-width: 85%; 
+        padding: 14px 18px; 
+        font-size: 14px; 
+    }
+    
+    .input-area { 
+        gap: 10px; 
+        padding: 14px; 
+    }
+    
+    #messageInput { 
+        padding: 12px 16px; 
+        font-size: 14px; 
+    }
+    
+    #sendBtn { 
+        padding: 12px 20px; 
+        font-size: 14px; 
+    }
+    
+    #debugPanel { 
+        right: 12px; 
+        bottom: 12px; 
+        width: calc(100% - 24px); 
+    }
+    
+    .chat-box { 
+        padding: 20px; 
+        gap: 14px; 
+    }
+}
+
+@media (max-width: 360px) {
+    .header h1 { 
+        font-size: 17px;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle { 
+        font-size: 11px; 
+    }
+    
+    .bubble { 
+        max-width: 90%; 
+        padding: 12px 16px; 
+        font-size: 13px; 
+    }
+    
+    #sendBtn { 
+        padding: 10px 16px; 
+        font-size: 13px; 
+    }
 }
