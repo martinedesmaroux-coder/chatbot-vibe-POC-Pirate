@@ -3,11 +3,11 @@
 
 /* Palette La Pâtisserie des Brotteaux */
 :root {
-    --primary: #2c2c2c;
-    --accent: #d4a574;
-    --secondary: #8b7355;
-    --light: #f5f0e8;
-    --white: #fafaf8;
+    --primary: #2c2c2c;      /* Noir élégant */
+    --accent: #d4a574;       /* Or pâtissier */
+    --secondary: #8b7355;    /* Caramel doux */
+    --light: #f5f0e8;        /* Crème vanille */
+    --white: #fafaf8;        /* Blanc cassé */
     --gradient-start: #f0c8a0;
     --gradient-end: #d4a574;
     --text: #2c2c2c;
@@ -22,7 +22,6 @@
 html, body { 
     height: 100%;
     width: 100%;
-    overflow-x: hidden; /* Empêche le débordement horizontal */
 }
 
 body {
@@ -58,7 +57,7 @@ body {
     background: var(--white);
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
-    overflow: hidden; /* Retour à hidden pour éviter les débordements */
+    overflow: hidden;
     height: auto;
     max-height: calc(100vh - 140px);
     min-width: 0;
@@ -73,6 +72,21 @@ body {
     top: 20px;
     max-height: calc(100vh - 40px);
     overflow-y: auto;
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    max-height: calc(100vh - 140px);
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 20px auto;
+    border: 1px solid rgba(212, 165, 116, 0.15);
 }
 
 .header {
@@ -149,6 +163,12 @@ body {
     color: var(--secondary);
     font-weight: 400;
     font-style: italic;
+}
+
+.name-input-error {
+    border-color: #c0392b;
+    background-color: rgba(192, 57, 43, 0.05);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
 }
 
 .validate-name-btn {
@@ -236,7 +256,6 @@ body {
     flex-direction: column;
     gap: 18px;
     background: var(--white);
-    min-height: 300px; /* Hauteur minimale pour le chat */
 }
 
 .chat-box::-webkit-scrollbar { width: 8px; }
@@ -268,7 +287,6 @@ body {
     padding: 16px 22px; 
     border-radius: 18px; 
     word-wrap: break-word;
-    word-break: break-word; /* Évite le débordement des longs mots */
     font-size: 15px; 
     line-height: 1.7; 
     font-weight: 400;
@@ -300,51 +318,26 @@ body {
     border: 1px solid rgba(139, 115, 85, 0.12);
 }
 
-/* Animation point de frappe */
-.dot-flashing {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--accent);
-    animation: dotFlashing 1s infinite linear alternate;
+.typing-dot { 
+    width: 9px; 
+    height: 9px; 
+    background: var(--accent); 
+    border-radius: 50%; 
+    animation: typing 1.4s infinite; 
+    opacity: 0.7;
 }
 
-.dot-flashing::before,
-.dot-flashing::after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 0;
-}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
-.dot-flashing::before {
-    left: -12px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--accent);
-    animation: dotFlashing 1s infinite alternate;
-    animation-delay: 0s;
-}
-
-.dot-flashing::after {
-    left: 12px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--accent);
-    animation: dotFlashing 1s infinite alternate;
-    animation-delay: 1s;
-}
-
-@keyframes dotFlashing {
-    0% {
-        background-color: var(--accent);
+@keyframes typing {
+    0%, 60%, 100% {
+        opacity: 0.4;
+        transform: translateY(0);
     }
-    50%,
-    100% {
-        background-color: rgba(212, 165, 116, 0.3);
+    30% {
+        opacity: 1;
+        transform: translateY(-8px);
     }
 }
 
@@ -354,9 +347,7 @@ body {
     padding: 0; 
     background: var(--white); 
     border-top: 1px solid rgba(139, 115, 85, 0.15); 
-    flex-shrink: 0;
-    margin-bottom: 0;
-    padding-bottom: 2px; /* Petit padding pour éviter que le disclaimer soit coupé */
+    flex-shrink: 0; 
 }
 
 .input-helper-text { 
@@ -378,7 +369,7 @@ body {
 .disclaimer-text { 
     font-size: 11px; 
     color: var(--secondary); 
-    padding: 0 20px 16px; /* Padding optimisé */
+    padding: 0 20px 14px; 
     margin: 0; 
     font-style: italic; 
     text-align: center;
@@ -395,7 +386,6 @@ body {
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, opacity 0.3s;
     font-family: Georgia, serif;
     background-color: var(--white);
-    min-width: 0; /* Empêche le débordement */
 }
 
 #messageInput:focus { 
@@ -426,8 +416,6 @@ body {
     cursor: pointer; 
     transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background 0.3s;
     letter-spacing: 0.5px;
-    white-space: nowrap; /* Empêche le texte du bouton de se couper */
-    flex-shrink: 0;
 }
 
 #sendBtn:hover:not(:disabled) { 
@@ -479,7 +467,6 @@ body {
     overflow: auto; 
     max-height: 140px; 
     font-size: 11px;
-    word-wrap: break-word;
 }
 
 .debug-toggle { 
@@ -492,13 +479,27 @@ body {
     font-weight: 500;
     font-family: Georgia, serif;
     transition: all 0.3s;
-    font-size: 12px;
 }
 
 .debug-toggle:hover { 
     background: var(--accent); 
     color: var(--white);
     transform: translateY(-1px);
+}
+
+footer { 
+    background: var(--primary); 
+    color: var(--white); 
+    text-align: center; 
+    padding: 18px 24px; 
+    font-size: 13px; 
+    font-weight: 400; 
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+}
+
+footer p { 
+    margin: 0; 
 }
 
 /* --- Calendrier --- */
@@ -583,248 +584,103 @@ body {
     border: 2px solid var(--accent);
 }
 
-/* ============================================
-   RESPONSIVE DESIGN - MOBILE FIRST
-   ============================================ */
+.calendar-date.delivery-day {
+    background-color: rgba(212, 165, 116, 0.2);
+    border-radius: 50%;
+}
 
-/* Tablettes (< 1024px) */
+/* Responsive Design */
 @media (max-width: 1024px) {
     .wrapper { 
         flex-direction: column; 
-        gap: 20px;
-        padding: 0 16px;
+        gap: 20px; 
+    }
+    .chat-column { 
+        max-height: none; 
+    }
+    .info-column { 
+        width: 100%; 
+        position: static; 
+        max-height: none; 
+    }
+}
+
+@media (max-width: 640px) {
+    .wrapper { 
+        padding: 0 12px; 
+        margin: 12px auto; 
+        gap: 12px; 
     }
     
     .chat-column { 
-        max-height: none;
-        min-height: 500px;
+        border-radius: 8px; 
+        max-height: none; 
     }
     
     .info-column { 
         width: 100%; 
-        position: static; 
-        max-height: none;
-    }
-    
-    #debugPanel {
-        width: 320px;
-    }
-}
-
-/* Smartphones (< 640px) */
-@media (max-width: 640px) {
-    body {
-        padding: 0;
-    }
-    
-    .wrapper { 
-        padding: 0 8px;
-        margin: 8px auto;
-        gap: 16px;
-        min-height: calc(100vh - 16px);
-    }
-    
-    .chat-column { 
-        border-radius: 12px;
-        max-height: none;
-        min-height: calc(100vh - 24px);
-        height: auto;
-    }
-    
-    .info-column { 
-        width: 100%;
-    }
-    
-    .header {
-        padding: 16px 14px;
     }
     
     .header h1 { 
-        font-size: 18px;
-        letter-spacing: 1.2px;
-        margin-bottom: 6px;
+        font-size: 20px;
+        letter-spacing: 1.5px;
     }
     
     .subtitle {
-        font-size: 11px;
-        line-height: 1.5;
-    }
-    
-    .name-input-section {
-        padding: 14px 16px;
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .name-input {
-        width: 100%;
-        padding: 12px 16px;
-        font-size: 14px;
-    }
-    
-    .validate-name-btn {
-        width: 100%;
-        padding: 12px 20px;
-    }
-    
-    .chat-box {
-        padding: 16px;
-        gap: 14px;
-        min-height: 250px;
+        font-size: 12px;
     }
     
     .bubble { 
-        max-width: 85%;
-        padding: 12px 16px;
-        font-size: 14px;
-        line-height: 1.6;
+        max-width: 85%; 
+        padding: 14px 18px; 
+        font-size: 14px; 
     }
     
     .input-area { 
-        gap: 8px;
-        padding: 12px;
-        flex-wrap: nowrap;
+        gap: 10px; 
+        padding: 14px; 
     }
     
     #messageInput { 
-        padding: 12px 14px;
-        font-size: 14px;
-        min-width: 0;
-        flex: 1;
+        padding: 12px 16px; 
+        font-size: 14px; 
     }
     
     #sendBtn { 
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-    
-    .disclaimer-text {
-        font-size: 10px;
-        padding: 0 12px 14px; /* Padding augmenté pour mobile */
+        padding: 12px 20px; 
+        font-size: 14px; 
     }
     
     #debugPanel { 
-        right: 8px;
-        bottom: 8px;
-        width: calc(100vw - 16px);
-        max-width: 360px;
-        font-size: 11px;
+        right: 12px; 
+        bottom: 12px; 
+        width: calc(100% - 24px); 
     }
     
-    .info-card {
-        padding: 16px;
-        font-size: 12px;
-    }
-    
-    .info-card-logo {
-        height: 100px;
-    }
-    
-    .info-card h3 {
-        font-size: 15px;
-    }
-    
-    .calendar-container {
-        padding: 16px;
-    }
-    
-    .calendar-header h4 {
-        font-size: 15px;
-    }
-    
-    .calendar-cell {
-        padding: 8px 0;
-        font-size: 12px;
-    }
-    
-    .calendar-day-name {
-        font-size: 10px;
+    .chat-box { 
+        padding: 20px; 
+        gap: 14px; 
     }
 }
 
-/* Très petits écrans (< 360px) */
 @media (max-width: 360px) {
-    .wrapper {
-        padding: 0 4px;
-        margin: 4px auto;
-    }
-    
-    .chat-column {
-        border-radius: 8px;
-    }
-    
-    .header {
-        padding: 12px 10px;
-    }
-    
     .header h1 { 
-        font-size: 16px;
-        letter-spacing: 0.8px;
+        font-size: 17px;
+        letter-spacing: 1px;
     }
     
     .subtitle { 
-        font-size: 10px;
-    }
-    
-    .chat-box {
-        padding: 12px;
-        gap: 12px;
+        font-size: 11px; 
     }
     
     .bubble { 
-        max-width: 90%;
-        padding: 10px 14px;
-        font-size: 13px;
-    }
-    
-    .input-area {
-        padding: 10px 8px;
-        gap: 6px;
-    }
-    
-    #messageInput {
-        padding: 10px 12px;
-        font-size: 13px;
+        max-width: 90%; 
+        padding: 12px 16px; 
+        font-size: 13px; 
     }
     
     #sendBtn { 
-        padding: 10px 16px;
-        font-size: 13px;
-    }
-    
-    .info-card {
-        padding: 12px;
-    }
-    
-    .calendar-container {
-        padding: 12px;
-    }
-    
-    .calendar-grid {
-        gap: 4px;
-    }
-    
-    .calendar-cell {
-        padding: 6px 0;
-        font-size: 11px;
-    }
-}
-
-/* Landscape mobile (hauteur < 500px) */
-@media (max-height: 500px) and (orientation: landscape) {
-    .chat-column {
-        max-height: none;
-    }
-    
-    .chat-box {
-        min-height: 200px;
-    }
-    
-    .header {
-        padding: 12px 16px;
-    }
-    
-    .subtitle {
-        display: none; /* Masquer le sous-titre en paysage pour gagner de l'espace */
+        padding: 10px 16px; 
+        font-size: 13px; 
     }
 }
