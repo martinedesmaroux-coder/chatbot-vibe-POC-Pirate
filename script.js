@@ -410,6 +410,9 @@ async function sendMessage() {
     const typingId = showTypingIndicator();
     
     try {
+        // Récupérer le contenu de la zone de texte des notes
+        const notesText = document.getElementById('notesTextarea').value;
+
         // Préparer le payload afin de pouvoir le réutiliser pour un retry
         const payload = {
             conversationId: conversationId,
@@ -418,7 +421,8 @@ async function sendMessage() {
             chatbotName: chatbotName,
             action: 'message',
             message: message,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            note: notesText // Ajout des notes
         };
         
         // Envoyer le message au webhook
