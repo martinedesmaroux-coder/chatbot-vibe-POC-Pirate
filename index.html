@@ -8,46 +8,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <!-- Colonne de Chat -->
-        <div class="chat-column">
-            <div class="header">
-                <div class="header-main">
-                    <h1 id="chatbotTitle" data-client-name-display="true">La Pâtisserie des Brotteaux</h1>
-                    <p class="subtitle">Madame Martin souhaite passer une commande. Vous pouvez la questionner. Lorsque vous avez obtenu toutes les informations nécessaires, récapitulez l'ensemble de la commande et proposez de lui envoyer un devis.</p>
-                </div>
-                <div class="header-actions">
-                    <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
-                </div>
-            </div>
-            <div class="name-input-section" hidden>
-                <input 
-                    type="text" 
-                    id="clientNameInput" 
-                    class="name-input" 
-                    placeholder="Entrez votre nom pour commencer"
-                    autocomplete="off"
-                >
-                <button id="validateNameBtn" class="validate-name-btn" disabled>Valider</button>
-            </div>
-            <div class="chat-box" id="chatBox">
-                <!-- Les messages s'affichent ici -->
-            </div>
-            <div class="input-area-wrapper">
-                <div class="input-area">
-                    <input 
-                        type="text" 
-                        id="messageInput" 
-                        placeholder="Validez votre nom pour écrire..."
-                        autocomplete="off"
-                        disabled
-                    >
-                    <button id="sendBtn" disabled>Envoyer</button>
-                </div>
-            </div>
-            <p class="disclaimer-text">Votre prénom sert uniquement à personnaliser votre expérience.<br>Vos échanges, anonymisés, peuvent être utilisés pour entraîner des intelligences artificielles, sans aucune donnée identifiable.</p>
-        </div>
-
-        <!-- Colonne d'information -->
+        <!-- Colonne d'information (maintenant à gauche) -->
         <div class="info-column">
             <div class="info-card">
                 <img src="La patisserie des Brotteaux.png" alt="Logo Pâtisserie des Brotteaux" class="info-card-logo">
@@ -69,6 +30,57 @@
                 </ul>
             </div>
             <div id="calendar-container" class="calendar-container"></div>
+        </div>
+        <!-- Conteneur pour la colonne de chat et le disclaimer -->
+        <div class="chat-container">
+            <!-- Colonne de Chat -->
+            <div class="chat-column">
+                <div class="header">
+                    <div class="header-main">
+                        <h1 id="chatbotTitle" data-client-name-display="true">La Pâtisserie des Brotteaux</h1>
+                        <p class="subtitle">Madame Martin souhaite passer une commande. Vous pouvez la questionner. Lorsque vous avez obtenu toutes les informations nécessaires, récapitulez l'ensemble de la commande et proposez de lui envoyer un devis.</p>
+                    </div>
+                    <div class="header-actions">
+                        <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
+                    </div>
+                </div>
+                <div class="name-input-section" hidden>
+                    <input 
+                        type="text" 
+                        id="clientNameInput" 
+                        class="name-input" 
+                        placeholder="Entrez votre nom pour commencer"
+                        autocomplete="off"
+                    >
+                    <button id="validateNameBtn" class="validate-name-btn" disabled>Valider</button>
+                </div>
+                <div class="chat-box" id="chatBox">
+                    <!-- Les messages s'affichent ici -->
+                </div>
+                <div class="input-area-wrapper">
+                    <div class="input-area">
+                        <input 
+                            type="text" 
+                            id="messageInput" 
+                            placeholder="Validez votre nom pour écrire..."
+                            autocomplete="off"
+                            disabled
+                        >
+                        <button id="sendBtn" disabled>Envoyer</button>
+                    </div>
+                </div>
+            </div>
+            <p class="disclaimer-text">Votre prénom sert uniquement à personnaliser votre expérience.<br>Vos échanges, anonymisés, peuvent être utilisés pour entraîner des intelligences artificielles, sans aucune donnée identifiable.</p>
+        </div>
+        <!-- Colonne de Notes (maintenant à droite) -->
+        <div class="notes-column">
+            <div class="info-card">
+                <h3>Notes</h3>
+                <textarea 
+                    id="notesTextarea" 
+                    class="notes-textarea" 
+                    placeholder="Saisissez vos notes ici..."></textarea>
+            </div>
         </div>
 
     </div>
