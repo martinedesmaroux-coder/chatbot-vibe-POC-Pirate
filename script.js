@@ -14,38 +14,12 @@ function generateUUID() {
 
 // Variables globales
 let chatbotName = 'La Pâtisserie des Brotteaux';
-let clientName = 'Madame Martin';  // Nom du client par défaut
+let clientName = 'Pâtissier';  // Nom du client par défaut
 let conversationId = Math.floor(Date.now() * Math.random()).toString();  // ID numérique unique
 let messageCounter = 0;  // Compteur de messages
 const MAX_EMPTY_BODY_RETRIES = 1;
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-/**
- * Démarre le chat en utilisant un nom de client prédéfini.
- * @param {string} nameValue Le nom du client à utiliser.
- */
-function startChat(nameValue) {
-    const messageInput = document.getElementById('messageInput');
-    const inputHelperText = document.querySelector('.input-helper-text');
-    const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
-    const clientNameInput = document.getElementById('clientNameInput');
-    const validateNameBtn = document.getElementById('validateNameBtn');
-    
-    if (nameValue) {
-        clientName = nameValue;
-        // Mettre à jour le nom affiché dans l'en-tête (si nécessaire)
-        if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
-        // Activer la zone de saisie de message
-        messageInput.disabled = false;
-        
-        // Mettre à jour les textes d'aide
-        if (inputHelperText) inputHelperText.textContent = '';
-        messageInput.placeholder = 'Écrivez votre message...';
-        // Afficher le premier message de l'utilisateur de manière progressive, sans l'envoyer à Make
-        displayProgressively("Bonjour, je voudrais passer une commande.", 'ai');
-    }
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Éléments du DOM ---
@@ -64,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clientNameDisplay = document.querySelector('[data-client-name-display="true"]');
     const clientNameInput = document.getElementById('clientNameInput');
     const validateNameBtn = document.getElementById('validateNameBtn');
+    const nameInputSection = document.querySelector('.name-input-section');
     
     // --- Événements ---
     if (sendBtn) {
@@ -98,22 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         validateNameBtn.addEventListener('click', () => {
             const nameValue = clientNameInput.value.trim();
             if (nameValue) {
-                clientName = nameValue;
-                // 1. Mettre à jour le nom affiché dans l'en-tête
-                if (clientNameDisplay) clientNameDisplay.dataset.clientName = nameValue;
-                // 2. Activer la zone de saisie de message
-                messageInput.disabled = false;
-                
-                // 3. Mettre à jour les textes d'aide
-                if (inputHelperText) inputHelperText.textContent = '';
-                messageInput.placeholder = 'Écrivez votre message...';
-                // 4. Désactiver la section de saisie du nom
-                clientNameInput.disabled = true;
-                validateNameBtn.disabled = true;
-                
-                // 5. Envoyer le nom à Make et afficher le premier message
-                messageInput.focus();
-                // 6. Démarrer le chat pour afficher le message de bienvenue
                 startChat(nameValue);
             }
         });
@@ -166,95 +125,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Initialise le calendrier
     renderCalendar(new Date(2025, 10, 5)); // Initialise le calendrier en Novembre 2025
+
+    // Pré-remplir et démarrer le chat avec le nom par défaut
+    if (clientNameInput) {
+        clientNameInput.value = clientName;
+        validateNameBtn.disabled = false;
+    }
 });
 
-// Garde en mémoire la date affichée par le calendrier
-let currentCalendarDate = new Date();
-
 /**
- * Génère et affiche un calendrier dynamique.
- * @param {Date} dateToShow La date à utiliser pour afficher le mois correct.
+ * Démarre le chat en utilisant un nom de client.
+ * @param {string} nameValue Le nom du client à utiliser.
  */
-function renderCalendar(dateToShow) {
-    const calendarContainer = document.getElementById('calendar-container');
-    if (!calendarContainer) return;
-    
-    currentCalendarDate = new Date(dateToShow); // Utilise la date passée pour le mois et l'année affichés
-    const month = currentCalendarDate.getMonth();
-    const year = currentCalendarDate.getFullYear();
-    
-    // La date fixe à surligner (5 décembre 2025)
-    const highlightDay = 5;
-    const highlightMonth = 11; // Décembre est le 11ème mois (0-indexé)
-    const highlightYear = 2025;
-    
-    const firstDayOfMonth = new Date(year, month, 1);
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    let startingDay = firstDayOfMonth.getDay();
-    startingDay = (startingDay === 0) ? 6 : startingDay - 1; // Lundi = 0, Dimanche = 6
-    
-    const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-    const dayNames = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-    
-    let html = `
-        <div class="calendar-header">
-            <button id="prev-month-btn" class="calendar-nav-btn">‹</button>
-            <h4>${monthNames[month]} ${year}</h4>
-            <button id="next-month-btn" class="calendar-nav-btn">›</button>
-        </div>
-        <div class="calendar-grid">
-    `;
-    
-    dayNames.forEach(day => {
-        html += `<div class="calendar-cell calendar-day-name">${day}</div>`;
-    });
-    
-    for (let i = 0; i < startingDay; i++) {
-        html += `<div class="calendar-cell"></div>`;
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-        // Le jour est-il celui à surligner ?
-        const isToday = (day === highlightDay && month === highlightMonth && year === highlightYear);
-        const dayOfWeek = (new Date(year, month, day).getDay() + 6) % 7; // 0 (Lundi) à 6 (Dimanche)
-        const isMonday = dayOfWeek === 0;
-        html += `<div class="calendar-cell calendar-date ${isToday ? 'today' : ''} ${isMonday ? 'monday' : ''}">${day}</div>`;
-    }
-    
-    html += `</div>`;
-    calendarContainer.innerHTML = html;
-    
-    // --- Logique de navigation ---
-    const nextMonthBtn = document.getElementById('next-month-btn');
-    const prevMonthBtn = document.getElementById('prev-month-btn');
-    
-    // Limites de navigation sur un an, de novembre 2025 à novembre 2026
-    const minNavDate = new Date(2025, 10, 1); // Novembre 2025
-    const maxNavDate = new Date(2026, 10, 1); // Novembre 2026
-    
-    // Désactiver le bouton "précédent" si on est au mois minimum
-    if (currentCalendarDate.getFullYear() <= minNavDate.getFullYear() && currentCalendarDate.getMonth() <= minNavDate.getMonth()) {
-        prevMonthBtn.disabled = true;
-    } else {
-        prevMonthBtn.disabled = false;
-    }
-    
-    // Désactiver le bouton "suivant" si on est au mois maximum
-    if (currentCalendarDate.getFullYear() >= maxNavDate.getFullYear() && currentCalendarDate.getMonth() >= maxNavDate.getMonth()) {
-        nextMonthBtn.disabled = true;
-    } else {
-        nextMonthBtn.disabled = false;
-    }
-    
-    nextMonthBtn.addEventListener('click', () => {
-        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-        renderCalendar(currentCalendarDate);
-    });
-    
-    prevMonthBtn.addEventListener('click', () => {
-        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-        renderCalendar(currentCalendarDate);
-    });
+function startChat(nameValue) {
+    const messageInput = document.getElementById('messageInput');
+    const nameInputSection = document.querySelector('.name-input-section');
+
+    clientName = nameValue;
+
+    // Activer la zone de saisie de message
+    messageInput.disabled = false;
+    messageInput.placeholder = 'Écrivez votre message...';
+
+    // Masquer la section de saisie du nom
+    if (nameInputSection) nameInputSection.hidden = true;
+
+    // Afficher le premier message de l'utilisateur de manière progressive
+    const firstMessage = "Bonjour, je voudrais passer une commande.";
+    displayProgressively(firstMessage, 'ai');
+    messageInput.focus();
 }
 
 /**
@@ -412,12 +311,13 @@ async function sendMessage() {
     try {
         // Récupérer le contenu de la zone de texte des notes
         const notesText = document.getElementById('notesTextarea').value;
+        messageCounter++; // Incrémente le compteur pour chaque nouveau message
 
         // Préparer le payload afin de pouvoir le réutiliser pour un retry
         const payload = {
             conversationId: conversationId,
-            messageId: messageCounter.toString(),
-            clientName: clientName,
+            messageId: messageCounter,
+            clientName: clientName, // Le nom est déjà défini
             chatbotName: chatbotName,
             action: 'message',
             message: message,
@@ -543,18 +443,29 @@ async function sendMessage() {
             return;
         }
         
-        // Déterminer la réponse à afficher : priorité au JSON.reply, sinon texte brut
+        // Déterminer la réponse à afficher : priorité au texte brut, puis JSON.reply
         let replyText = null;
-        if (data && typeof data.reply === 'string') replyText = data.reply;
-        else if (text && text.trim().length > 0) replyText = text.trim();
+
+        // 1. Si on a du texte brut (réponse directe de Make)
+        if (text && text.trim().length > 0) {
+            replyText = text.trim();
+        }
+        // 2. Sinon, chercher dans data.reply (format JSON)
+        else if (data && typeof data.reply === 'string') {
+            replyText = data.reply;
+        }
+        // 3. Sinon, chercher dans data.candidates (format Gemini)
+        else if (data && data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+            replyText = data.candidates[0].content.parts[0].text;
+        }
         
         if (replyText) {
             removeTypingIndicator(typingId);
             await displayProgressively(replyText, 'ai');
         } else {
-            console.error('Réponse JSON ne contient pas la propriété "reply" et pas de texte brut :', data, text);
+            console.error('Impossible d\'extraire une réponse. Données reçues :', data, text);
             removeTypingIndicator(typingId);
-            addMessage('❌ Erreur : la réponse de Make est vide ou ne contient pas de champ "reply". Voir la console.', 'ai');
+            addMessage('❌ Erreur : impossible d\'extraire une réponse de Make. Voir la console pour les détails.', 'ai');
         }
         
     } catch (error) {

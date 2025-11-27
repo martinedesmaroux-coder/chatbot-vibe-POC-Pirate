@@ -40,11 +40,11 @@
                         <h1 id="chatbotTitle" data-client-name-display="true">La Pâtisserie des Brotteaux</h1>
                         <p class="subtitle">Madame Martin souhaite passer une commande. Vous pouvez la questionner. Lorsque vous avez obtenu toutes les informations nécessaires, récapitulez l'ensemble de la commande et proposez de lui envoyer un devis.</p>
                     </div>
-                    <div class="header-actions">
-                        <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher debug</button>
-                    </div>
                 </div>
-                <div class="name-input-section" hidden>
+                <div class="header-actions">
+                    <button id="debugToggle" class="debug-toggle" aria-pressed="false">Afficher le panneau de débogage</button>
+                </div>
+                <div class="name-input-section">
                     <input 
                         type="text" 
                         id="clientNameInput" 
@@ -74,6 +74,15 @@
         </div>
         <!-- Colonne de Notes (maintenant à droite) -->
         <div class="notes-column">
+            <div class="info-card" style="margin-bottom: 16px;">
+                <h3>Consignes</h3>
+                <div class="instructions">
+                    <p>Ce chatbot est conçu pour vous aider à prendre une commande.</p>
+                    <p>Vous pouvez poser des questions sur les produits, les prix, les options de livraison, etc.</p>
+                    <p>Essayez d'être précis dans vos demandes pour obtenir les meilleures réponses.</p>
+                    <p>N'hésitez pas à utiliser le bouton "Afficher debug" si vous rencontrez des problèmes.</p>
+                </div>
+            </div>
             <div class="info-card">
                 <h3>Notes</h3>
                 <textarea 
