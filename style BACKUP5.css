@@ -22,7 +22,7 @@
 html, body { 
     height: 100%;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Empêche le débordement horizontal */
 }
 
 body {
@@ -37,71 +37,67 @@ body {
     line-height: 1.8;
 }
 
-/* ============================================
-   LAYOUT RESPONSIVE - 3 COLONNES DESKTOP
-   ============================================ */
-
-/* Wrapper - S'adapte automatiquement */
+/* Wrapper à deux colonnes */
 .wrapper {
     width: 100%;
-    max-width: 1500px;
+    max-width: 1500px; /* Augmenté pour 3 colonnes */
     margin: 20px auto;
     padding: 0 20px;
-    display: grid;
-    grid-template-columns: 300px 1fr 300px; /* 3 colonnes sur desktop */
+    display: flex;
     gap: 24px;
-    align-items: start;
+    align-items: flex-start;
+    height: auto;
     min-height: calc(100vh - 140px);
 }
 
-/* Conteneur pour la colonne de chat */
+/* Conteneur pour la colonne de chat et le disclaimer */
 .chat-container {
+    flex: 1; /* Prend l'espace disponible */
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    grid-column: 2; /* Colonne centrale */
+    min-width: 0; /* Empêche le débordement dans un conteneur flex */
 }
 
-/* Colonne gauche : Info boutique */
-.info-column {
-    grid-column: 1;
-    position: sticky;
-    top: 20px;
-    align-self: start;
-}
-
-/* Colonne droite : Notes et Consignes */
-.notes-column {
-    grid-column: 3;
-    position: sticky;
-    top: 20px;
-    align-self: start;
-}
-
-/* Colonne Chat */
+/* Colonne gauche : Chat */
 .chat-column {
     display: flex;
     flex-direction: column;
     background: var(--white);
     border-radius: 12px; 
     box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08); 
-    overflow: hidden;
+    overflow: hidden; /* Rétabli pour des bords nets */
     height: auto;
     max-height: calc(100vh - 140px);
     min-width: 0;
     border: 1px solid rgba(212, 165, 116, 0.15);
 }
 
+/* Colonne droite : Info boutique (sticky) */
+.info-column {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+}
+
+/* Colonne de droite : Notes et Consignes */
+.notes-column {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+}
+
 .notes-textarea {
     width: 100%;
-    height: 300px;
+    height: 300px; /* Hauteur de base, peut être ajustée */
     padding: 12px 14px;
     border: 2px solid rgba(139, 115, 85, 0.2);
     border-radius: 10px;
     font-size: 14px;
     font-family: Georgia, serif;
     background-color: var(--white);
-    resize: vertical;
+    resize: vertical; /* Permet de redimensionner verticalement */
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -111,9 +107,21 @@ body {
     box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.12);
 }
 
-/* ============================================
-   STYLES GÉNÉRAUX
-   ============================================ */
+/* Section pour les notes sous le chatbot */
+.notes-section-bottom {
+    width: 100%;
+    max-width: 1500px; /* Même max-width que le wrapper */
+    margin: 0 auto 20px; /* Centré et avec une marge en bas */
+    padding: 0 20px;
+    display: grid;
+    /* Aligne la section des notes avec la colonne du chatbot */
+    grid-template-columns: 300px 1fr 300px;
+    gap: 24px;
+}
+
+/* Le conteneur de la carte de notes prend la 2ème colonne de la grille */
+.notes-section-bottom .info-card { grid-column: 2; }
+.notes-section-bottom .disclaimer-text { grid-column: 2; }
 
 .header {
     background-color: var(--primary);
@@ -156,6 +164,7 @@ body {
     display: none; 
 }
 
+/* Champ de saisie du nom client */
 .name-input-section { 
     padding: 18px 24px; 
     background: linear-gradient(135deg, rgba(240, 200, 160, 0.12), rgba(212, 165, 116, 0.08));
@@ -219,6 +228,7 @@ body {
     cursor: not-allowed;
 }
 
+/* Encadré d'information boutique */
 .info-card {
     background: linear-gradient(180deg, var(--white), var(--light));
     border-left: 3px solid var(--accent);
@@ -274,7 +284,7 @@ body {
     flex-direction: column;
     gap: 18px;
     background: var(--white);
-    min-height: 300px;
+    min-height: 300px; /* Hauteur minimale pour le chat */
 }
 
 .chat-box::-webkit-scrollbar { width: 8px; }
@@ -306,7 +316,7 @@ body {
     padding: 16px 22px; 
     border-radius: 18px; 
     word-wrap: break-word;
-    word-break: break-word;
+    word-break: break-word; /* Évite le débordement des longs mots */
     font-size: 15px; 
     line-height: 1.7; 
     font-weight: 400;
@@ -338,6 +348,7 @@ body {
     border: 1px solid rgba(139, 115, 85, 0.12);
 }
 
+/* Animation point de frappe */
 .dot-flashing {
     position: relative;
     width: 8px;
@@ -393,7 +404,7 @@ body {
     border-top: 1px solid rgba(139, 115, 85, 0.15); 
     flex-shrink: 0;
     margin-bottom: 0;
-    padding-bottom: 2px;
+    padding-bottom: 2px; /* Petit padding pour éviter que le disclaimer soit coupé */
 }
 
 .input-helper-text { 
@@ -407,7 +418,7 @@ body {
 .input-area { 
     display: flex; 
     gap: 12px; 
-    padding: 16px 20px; 
+    padding: 16px 20px 16px 20px; 
     background: var(--white); 
     flex-shrink: 0; 
 }
@@ -416,16 +427,17 @@ body {
     font-size: 11px; 
     color: var(--secondary); 
     padding: 0 20px;
-    margin: 12px 0 0 0;
+    margin: 12px 0 0 0; /* Marge en haut pour l'espacement */
     font-style: italic; 
     text-align: center;
     line-height: 1.6;
 }
 
+/* Style spécifique pour le disclaimer quand il est dans une carte */
 .disclaimer-in-card {
-    text-align: left;
-    margin-top: 16px;
-    padding: 0;
+    text-align: left; /* Aligner à gauche */
+    margin-top: 16px; /* Ajouter un espace au-dessus */
+    padding: 0; /* Retirer le padding horizontal */
 }
 
 #messageInput { 
@@ -438,7 +450,7 @@ body {
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, opacity 0.3s;
     font-family: Georgia, serif;
     background-color: var(--white);
-    min-width: 0;
+    min-width: 0; /* Empêche le débordement */
 }
 
 #messageInput:focus { 
@@ -469,7 +481,7 @@ body {
     cursor: pointer; 
     transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s, background 0.3s;
     letter-spacing: 0.5px;
-    white-space: nowrap;
+    white-space: nowrap; /* Empêche le texte du bouton de se couper */
     flex-shrink: 0;
 }
 
@@ -544,7 +556,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* Calendrier */
+/* --- Calendrier --- */
 .calendar-container {
     margin-top: 24px;
     background: var(--white);
@@ -627,35 +639,15 @@ body {
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - MOBILE FIRST
    ============================================ */
 
-/* Tablettes (< 1200px) - 2 colonnes */
-@media (max-width: 1200px) {
-   .wrapper { 
-    grid-template-columns: 1fr 300px; /* Passage à 2 colonnes */
-    gap: 24px; /* Augmenté de 20px à 24px */
-    padding: 0 16px;
-}
-    
-    .chat-container {
-        grid-column: 1; /* Le chat prend la première colonne */
-    }
-    
-    /* Info boutique passe en dessous du chat */
-    .info-column { 
-        grid-column: 1 / -1;
-        grid-row: 2;
-        position: static;
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+/* Tablettes (< 1024px) */
+@media (max-width: 1024px) {
+    .wrapper { 
+        flex-direction: column; 
         gap: 20px;
-    }
-    
-    .notes-column {
-        grid-column: 2; /* Les notes prennent la deuxième colonne */
-        grid-row: 1; /* S'assure qu'il est sur la même ligne que le chat */
+        padding: 0 16px;
     }
     
     .chat-column { 
@@ -663,47 +655,26 @@ body {
         min-height: 500px;
     }
     
-}
-
-/* Tablettes portrait et mobile (< 900px) - 1 colonne */
-@media (max-width: 900px) {
-    .wrapper { 
-        grid-template-columns: 1fr; /* Une seule colonne */
-        grid-auto-flow: row; /* Les éléments se suivent verticalement */
-        gap: 20px;
-        padding: 0 16px;
-    }
-    
-    .chat-container,
-    .info-column,
-    .notes-column,
-    .notes-section-bottom {
-        grid-column: 1 / -1; /* Chaque élément prend toute la largeur */
-        grid-row: auto; /* L'ordre est géré par la propriété 'order' */
-        position: static;
-        width: 100%;
-    }
-    
-    .chat-container { order: 1; } /* Chatbot en premier */
-    .notes-section-bottom { order: 2; } /* Bloc de notes en deuxième */
-    .info-column { /* Le bloc info (avec calendrier) vient en 3ème position */
-        order: 3;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    .notes-column { order: 4; } /* Le bloc consignes vient en dernier */
-    
-    .chat-column { 
+    .info-column { 
+        width: 100%; 
+        position: static; 
         max-height: none;
+    }
+    
+    .notes-column {
+        width: 100%;
+        position: static;
+    }
+
+    .notes-section-bottom {
+        display: block; /* Passe à un affichage simple sur mobile */
+        padding: 0 16px;
+        margin-top: 20px;
     }
     
     #debugPanel {
         width: 320px;
     }
-    #calendar-container {
-    margin-top: 16px; /* Espace au-dessus du calendrier */
-}
 }
 
 /* Smartphones (< 640px) */
@@ -713,32 +684,35 @@ body {
     }
     
     .wrapper { 
-        padding: 0 12px;
-        margin: 12px auto;
+        padding: 0 8px;
+        margin: 8px auto;
         gap: 16px;
-        min-height: calc(100vh - 24px);
+        min-height: calc(100vh - 16px);
     }
     
     .chat-column { 
         border-radius: 12px;
         max-height: none;
-        min-height: 400px;
+        min-height: calc(100vh - 24px);
         height: auto;
     }
     
+    .info-column { 
+        width: 100%;
+    }
+    
     .header {
-        padding: 16px;
-        flex-direction: column;
+        padding: 16px 14px;
     }
     
     .header h1 { 
-        font-size: 20px;
-        letter-spacing: 1.5px;
-        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: 1.2px;
+        margin-bottom: 6px;
     }
     
     .subtitle {
-        font-size: 12px;
+        font-size: 11px;
         line-height: 1.5;
     }
     
@@ -792,7 +766,7 @@ body {
     
     .disclaimer-text {
         font-size: 10px;
-        padding: 0 12px 14px;
+        padding: 0 12px 14px; /* Padding augmenté pour mobile */
     }
     
     #debugPanel { 
@@ -834,28 +808,28 @@ body {
     }
 }
 
-/* Très petits écrans (< 400px) */
-@media (max-width: 400px) {
+/* Très petits écrans (< 360px) */
+@media (max-width: 360px) {
     .wrapper {
-        padding: 0 8px;
-        margin: 8px auto;
+        padding: 0 4px;
+        margin: 4px auto;
     }
     
     .chat-column {
-        border-radius: 10px;
+        border-radius: 8px;
     }
     
     .header {
-        padding: 12px;
+        padding: 12px 10px;
     }
     
     .header h1 { 
-        font-size: 18px;
-        letter-spacing: 1px;
+        font-size: 16px;
+        letter-spacing: 0.8px;
     }
     
     .subtitle { 
-        font-size: 11px;
+        font-size: 10px;
     }
     
     .chat-box {
@@ -870,7 +844,7 @@ body {
     }
     
     .input-area {
-        padding: 10px;
+        padding: 10px 8px;
         gap: 6px;
     }
     
@@ -902,7 +876,7 @@ body {
     }
 }
 
-/* Mode paysage mobile */
+/* Landscape mobile (hauteur < 500px) */
 @media (max-height: 500px) and (orientation: landscape) {
     .chat-column {
         max-height: none;
@@ -913,15 +887,10 @@ body {
     }
     
     .header {
-        padding: 10px 16px;
-    }
-    
-    .header h1 {
-        font-size: 18px;
-        margin-bottom: 4px;
+        padding: 12px 16px;
     }
     
     .subtitle {
-        display: none;
+        display: none; /* Masquer le sous-titre en paysage pour gagner de l'espace */
     }
 }

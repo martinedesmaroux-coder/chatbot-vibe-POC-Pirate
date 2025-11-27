@@ -177,23 +177,22 @@
                     <p><strong>Exemple de message final du pâtissier :</strong></p>
                     <p><em>Très bien, je récapitule : vous souhaitez un entremets pour un baptême prévu le 22 mars, avec un retrait l’après-midi entre 15h et 17h.<br>Composition : fruits rouges – vanille – citron, pour 12 parts, avec une décoration florale.<br>Budget maximum : 85 €.<br>Si cela vous convient, je peux vous préparer un devis.</em></p>
                 </div>
+                <p class="disclaimer-text disclaimer-in-card">Votre nom n’est utilisé que pour personnaliser votre expérience. L’IA n’a accès ni à votre nom ni à vos notes. L’EISF conserve les informations recueillies et vos échanges peuvent être réutilisés, après anonymisation, pour entraîner des systèmes d’intelligence artificielle, sans donnée identifiable.</p>
             </div>
         </div>
 
+        <!-- Section des Notes (maintenant dans le wrapper) -->
+        <div class="notes-section-bottom">
+            <div class="info-card">
+                <h3>Notes</h3>
+                <textarea 
+                    id="notesTextarea" 
+                    class="notes-textarea" 
+                    placeholder="Saisissez vos notes ici..."></textarea>
+            </div>
+        </div>
     </div>
     
-    <!-- Section des Notes (sous le chatbot) -->
-    <div class="notes-section-bottom">
-        <div class="info-card">
-            <h3>Notes</h3>
-            <textarea 
-                id="notesTextarea" 
-                class="notes-textarea" 
-                placeholder="Saisissez vos notes ici..."></textarea>
-        </div>
-        <p class="disclaimer-text">Votre nom n’est utilisé que pour personnaliser votre expérience. L’IA n’a accès ni à votre nom ni à vos notes. L’EISF conserve les informations recueillies et vos échanges peuvent être réutilisés, après anonymisation, pour entraîner des systèmes d’intelligence artificielle, sans donnée identifiable.</p>
-    </div>
-
     <!-- Panneau de debug (toggle) -->
     <div id="debugPanel" class="debug-panel" hidden>
         <div style="display:flex;justify-content:space-between;align-items:center">
