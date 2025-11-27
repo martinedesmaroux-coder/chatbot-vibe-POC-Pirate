@@ -5,6 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Vibe</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Styles pour le calendrier */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-month-year {
+            font-weight: normal;
+            font-size: 1em;
+            color: #4a3f35;
+        }
+
+        .calendar-nav {
+            background: #c9a978;
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .calendar-nav:hover:not(:disabled) {
+            background: #b8976a;
+        }
+
+        .calendar-nav:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .calendar-table th {
+            padding: 8px;
+            text-align: center;
+            font-weight: normal;
+            color: #4a3f35;
+            border-bottom: 2px solid #e8dcc8;
+            font-size: 1em;
+        }
+
+        .calendar-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #f5f0e8;
+            color: #4a3f35;
+            font-size: 1em;
+        }
+
+        .calendar-table td:empty {
+            border: none;
+        }
+
+        /* Lundi plus foncé (toute la colonne) */
+        .calendar-table td.monday {
+            background-color: #e8dcc8;
+            font-weight: normal;
+        }
+
+        /* Cercle beige foncé autour du 5 décembre */
+        .calendar-table td.highlighted {
+            position: relative;
+            font-weight: normal;
+        }
+
+        .calendar-table td.highlighted::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            border: 2px solid #b8976a;
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -29,7 +119,7 @@
                     <li>Frais : 3 €</li>
                 </ul>
             </div>
-            <div id="calendar-container" class="calendar-container"></div>
+            <div id="calendar-container" class="info-card" style="margin-top: 16px;"></div>
         </div>
         <!-- Conteneur pour la colonne de chat et le disclaimer -->
         <div class="chat-container">
@@ -38,7 +128,8 @@
                 <div class="header">
                     <div class="header-main">
                         <h1 id="chatbotTitle" data-client-name-display="true">La Pâtisserie des Brotteaux</h1>
-                        <p class="subtitle">Madame Martin souhaite passer une commande. Vous pouvez la questionner. Lorsque vous avez obtenu toutes les informations nécessaires, récapitulez l'ensemble de la commande et proposez de lui envoyer un devis.</p>
+                        <p class="subtitle">Vous êtes pâtissier. Madame Martin souhaite passer une commande.<br>
+                        Veuillez lire attentivement les consignes avant de commencer l’exercice.</p>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -49,7 +140,7 @@
                         type="text" 
                         id="clientNameInput" 
                         class="name-input" 
-                        placeholder="Entrez votre nom pour commencer"
+                        placeholder="Votre nom"
                         autocomplete="off"
                     >
                     <button id="validateNameBtn" class="validate-name-btn" disabled>Valider</button>
@@ -70,25 +161,43 @@
                     </div>
                 </div>
             </div>
-            <p class="disclaimer-text">Votre prénom sert uniquement à personnaliser votre expérience.<br>Vos échanges, anonymisés, peuvent être utilisés pour entraîner des intelligences artificielles, sans aucune donnée identifiable.</p>
+            <p class="disclaimer-text">Votre nom n’est utilisé que pour personnaliser votre expérience. L’IA n’a accès ni à votre nom ni à vos notes. L’EISF conserve les informations recueillies et vos échanges peuvent être réutilisés, après anonymisation, pour entraîner des systèmes d’intelligence artificielle, sans donnée identifiable.</p>
         </div>
         <!-- Colonne de Notes (maintenant à droite) -->
         <div class="notes-column">
-            <div class="info-card" style="margin-bottom: 16px;">
-                <h3>Consignes</h3>
-                <div class="instructions">
-                    <p>Ce chatbot est conçu pour vous aider à prendre une commande.</p>
-                    <p>Vous pouvez poser des questions sur les produits, les prix, les options de livraison, etc.</p>
-                    <p>Essayez d'être précis dans vos demandes pour obtenir les meilleures réponses.</p>
-                    <p>N'hésitez pas à utiliser le bouton "Afficher debug" si vous rencontrez des problèmes.</p>
-                </div>
-            </div>
             <div class="info-card">
                 <h3>Notes</h3>
                 <textarea 
                     id="notesTextarea" 
                     class="notes-textarea" 
                     placeholder="Saisissez vos notes ici..."></textarea>
+            </div>
+            <div class="info-card" style="margin-top: 16px;">
+               <h3>Consignes</h3>
+                <div class="instructions">
+                    <p>Ce chatbot vous aide à prendre une commande (produits, budget, options de livraison…).</p>
+                    
+                     <p> Vous avez accès aux informations concernant les horaires, les modalités de livraison et l’adresse de votre pâtisserie.</p>
+                    
+                    <p><strong>1.</strong> Posez des questions précises pour obtenir des réponses pertinentes.</p>
+                
+                    <p><strong>2.</strong> Vous pouvez prendre des notes tout au long de l’échange ; elles seront disponibles dans le correctif.</p>
+                
+                    <p><strong>3.</strong> Une fois toutes les informations réunies, rédigez <strong>un seul message</strong> récapitulatif avec votre proposition pour le client.</p>
+                
+                    <p><strong>4.</strong> Terminez ce message en proposant l’envoi d’un devis :
+                        <strong>la simple mention du devis déclenche la correction</strong>.
+                    </p>
+                
+                    <p><strong>Exemple de message final du pâtissier :</strong></p>
+                    <p><em>
+                        Très bien, je récapitule : vous souhaitez un entremets pour un baptême prévu le 22 mars,
+                        avec un retrait l’après-midi entre 15h et 17h.<br>
+                        Composition : fruits rouges – vanille – citron, pour 12 parts, avec une décoration florale.<br>
+                        Budget maximum : 85 €.<br>
+                        Si cela vous convient, je peux vous préparer un devis.
+                    </em></p>
+                </div>
             </div>
         </div>
 
@@ -113,5 +222,111 @@
     </div>
     
     <script src="script.js"></script>
+    <script>
+        /**
+         * Affiche un calendrier pour un mois et une année donnés.
+         * @param {Date} date La date indiquant le mois et l'année à afficher.
+         */
+        let currentCalendarDate = new Date(2025, 11, 1); // Décembre 2025
+
+        function renderCalendar(date) {
+            const calendarContainer = document.getElementById('calendar-container');
+            if (!calendarContainer) {
+                console.error("L'élément #calendar-container est introuvable.");
+                return;
+            }
+
+            const year = date.getFullYear();
+            const month = date.getMonth(); // 0-11
+
+            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            const dayNames = ["Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"]; // Semaine commence lundi
+
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            let firstDayOfWeek = firstDayOfMonth.getDay(); // 0=Dimanche, 1=Lundi...
+            
+            // Ajuster pour que la semaine commence le lundi (0=lundi, 6=dimanche)
+            firstDayOfWeek = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
+            
+            const totalDays = lastDayOfMonth.getDate();
+
+            // Vérifier si on peut naviguer (décembre 2025 à novembre 2026)
+            const minDate = new Date(2025, 11, 1); // Décembre 2025
+            const maxDate = new Date(2026, 10, 30); // Novembre 2026
+            const canGoPrev = date > minDate;
+            const canGoNext = date < maxDate;
+
+            // Le HTML est généré
+            let html = `
+                <h3>Calendrier</h3>
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth" ${!canGoPrev ? 'disabled' : ''}>◄</button>
+                    <span class="calendar-month-year">${monthNames[month]} ${year}</span>
+                    <button class="calendar-nav" id="nextMonth" ${!canGoNext ? 'disabled' : ''}>►</button>
+                </div>
+                <table class="calendar-table">
+                    <thead>
+                        <tr>${dayNames.map(day => `<th>${day}</th>`).join('')}</tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let day = 1;
+            for (let i = 0; i < 6; i++) { // 6 lignes max pour un mois
+                html += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if ((i === 0 && j < firstDayOfWeek) || day > totalDays) {
+                        html += '<td></td>';
+                    } else {
+                        // Classes spéciales
+                        let classes = [];
+                        
+                        // Colonne lundi (j === 0) plus foncée
+                        if (j === 0) {
+                            classes.push('monday');
+                        }
+                        
+                        // Cercle beige foncé autour du 5 décembre 2025
+                        if (year === 2025 && month === 11 && day === 5) {
+                            classes.push('highlighted');
+                        }
+                        
+                        const classAttr = classes.length > 0 ? ` class="${classes.join(' ')}"` : '';
+                        html += `<td${classAttr}>${day}</td>`;
+                        day++;
+                    }
+                }
+                html += '</tr>';
+                if (day > totalDays) break; // Sortir si tous les jours sont placés
+            }
+
+            html += '</tbody></table>';
+            calendarContainer.innerHTML = html;
+            
+            // Ajouter les événements de navigation
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                    renderCalendar(currentCalendarDate);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                    renderCalendar(currentCalendarDate);
+                });
+            }
+        }
+
+        // Initialiser le calendrier au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar(currentCalendarDate);
+        });
+    </script>
 </body>
 </html>
