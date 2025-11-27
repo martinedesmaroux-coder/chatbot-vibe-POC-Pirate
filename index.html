@@ -161,66 +161,47 @@
                     </div>
                 </div>
             </div>
-            <p class="disclaimer-text">Votre nom n’est utilisé que pour personnaliser votre expérience. L’IA n’a accès ni à votre nom ni à vos notes. L’EISF conserve les informations recueillies et vos échanges peuvent être réutilisés, après anonymisation, pour entraîner des systèmes d’intelligence artificielle, sans donnée identifiable.</p>
         </div>
+
         <!-- Colonne de Notes (maintenant à droite) -->
         <div class="notes-column">
             <div class="info-card">
-                <h3>Notes</h3>
-                <textarea 
-                    id="notesTextarea" 
-                    class="notes-textarea" 
-                    placeholder="Saisissez vos notes ici..."></textarea>
-            </div>
-            <div class="info-card" style="margin-top: 16px;">
                <h3>Consignes</h3>
                 <div class="instructions">
                     <p>Ce chatbot vous aide à prendre une commande (produits, budget, options de livraison…).</p>
-                    
-                     <p> Vous avez accès aux informations concernant les horaires, les modalités de livraison et l’adresse de votre pâtisserie.</p>
-                    
+                    <p>Vous avez accès aux informations concernant les horaires, les modalités de livraison et l’adresse de votre pâtisserie.</p>
                     <p><strong>1.</strong> Posez des questions précises pour obtenir des réponses pertinentes.</p>
-                
                     <p><strong>2.</strong> Vous pouvez prendre des notes tout au long de l’échange ; elles seront disponibles dans le correctif.</p>
-                
                     <p><strong>3.</strong> Une fois toutes les informations réunies, rédigez <strong>un seul message</strong> récapitulatif avec votre proposition pour le client.</p>
-                
-                    <p><strong>4.</strong> Terminez ce message en proposant l’envoi d’un devis :
-                        <strong>la simple mention du devis déclenche la correction</strong>.
-                    </p>
-                
+                    <p><strong>4.</strong> Terminez ce message en proposant l’envoi d’un devis : <strong>la simple mention du devis déclenche la correction</strong>.</p>
                     <p><strong>Exemple de message final du pâtissier :</strong></p>
-                    <p><em>
-                        Très bien, je récapitule : vous souhaitez un entremets pour un baptême prévu le 22 mars,
-                        avec un retrait l’après-midi entre 15h et 17h.<br>
-                        Composition : fruits rouges – vanille – citron, pour 12 parts, avec une décoration florale.<br>
-                        Budget maximum : 85 €.<br>
-                        Si cela vous convient, je peux vous préparer un devis.
-                    </em></p>
+                    <p><em>Très bien, je récapitule : vous souhaitez un entremets pour un baptême prévu le 22 mars, avec un retrait l’après-midi entre 15h et 17h.<br>Composition : fruits rouges – vanille – citron, pour 12 parts, avec une décoration florale.<br>Budget maximum : 85 €.<br>Si cela vous convient, je peux vous préparer un devis.</em></p>
                 </div>
             </div>
         </div>
 
     </div>
     
+    <!-- Section des Notes (sous le chatbot) -->
+    <div class="notes-section-bottom">
+        <div class="info-card">
+            <h3>Notes</h3>
+            <textarea 
+                id="notesTextarea" 
+                class="notes-textarea" 
+                placeholder="Saisissez vos notes ici..."></textarea>
+        </div>
+        <p class="disclaimer-text">Votre nom n’est utilisé que pour personnaliser votre expérience. L’IA n’a accès ni à votre nom ni à vos notes. L’EISF conserve les informations recueillies et vos échanges peuvent être réutilisés, après anonymisation, pour entraîner des systèmes d’intelligence artificielle, sans donnée identifiable.</p>
+    </div>
+
     <!-- Panneau de debug (toggle) -->
     <div id="debugPanel" class="debug-panel" hidden>
         <div style="display:flex;justify-content:space-between;align-items:center">
-            <h3 style="margin:0">Debug - dernière réponse Make</h3>
-            <div style="display:flex;gap:8px;align-items:center">
-                <button id="copyPayloadBtn" class="debug-toggle">Copier dernier payload</button>
-            </div>
         </div>
-        <div style="margin-top:8px"><strong>Statut:</strong> <span id="debugStatus">-</span></div>
-        <div><strong>Content-Type:</strong> <span id="debugContentType">-</span></div>
-        <div><strong>Headers:</strong></div>
-        <pre id="debugHeaders">-</pre>
-        <div><strong>Body:</strong></div>
-        <pre id="debugBody">-</pre>
-        <div><strong>Dernier payload envoyé:</strong></div>
-        <pre id="debugPayload">-</pre>
+                <button id="copyPayloadBtn" class="debug-toggle">Copier dernier payload</button>
+        </div>
     </div>
-    
+
     <script src="script.js"></script>
     <script>
         /**
